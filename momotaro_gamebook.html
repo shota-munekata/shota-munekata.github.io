@@ -1,0 +1,1595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Momotaro Adventure - English Gamebook</title>
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXXX" 
+            crossorigin="anonymous"></script>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'ヒラギノ角ゴシック', 'Yu Gothic Medium', '游ゴシック Medium', YuGothic, '游ゴシック体', 'Meiryo', Arial, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 119, 198, 0.2) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .story-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.1),
+                0 2px 8px rgba(255, 255, 255, 0.2) inset;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .story-container::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7);
+            border-radius: 22px;
+            z-index: -1;
+            opacity: 0.1;
+        }
+        
+        .choices {
+            margin-top: 20px;
+        }
+        
+        /* Audio controls styling */
+        .audio-controls {
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+        
+        .audio-btn {
+            display: inline-block;
+            padding: 12px 24px;
+            margin: 0 8px;
+            background: linear-gradient(135deg, #17a2b8 0%, #117a8b 100%);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(23, 162, 184, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .audio-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(23, 162, 184, 0.4);
+        }
+        
+        .audio-btn:active {
+            transform: translateY(0);
+        }
+        
+        .audio-btn.playing {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            animation: audioPulse 1.5s infinite;
+        }
+        
+        @keyframes audioPulse {
+            0% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.7); }
+            70% { box-shadow: 0 0 0 8px rgba(40, 167, 69, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0); }
+        }
+        
+        .choice-container {
+            display: flex;
+            align-items: center;
+            margin: 12px 0;
+            gap: 10px;
+        }
+        
+        .choice-button-main {
+            flex: 1;
+            display: block;
+            padding: 18px 25px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            text-align: left;
+            box-shadow: 
+                0 4px 15px rgba(102, 126, 234, 0.3),
+                0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .choice-button-main::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .choice-button-main:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 8px 25px rgba(102, 126, 234, 0.4),
+                0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        .choice-button-main:hover::before {
+            left: 100%;
+        }
+        
+        .choice-button-main:active {
+            transform: translateY(0);
+            transition: transform 0.1s;
+        }
+        
+        .choice-audio-btn {
+            width: 45px;
+            height: 45px;
+            padding: 0;
+            background: linear-gradient(135deg, #17a2b8 0%, #117a8b 100%);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(23, 162, 184, 0.3);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        
+        .choice-audio-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s;
+        }
+        
+        .choice-audio-btn:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(23, 162, 184, 0.4);
+        }
+        
+        .choice-audio-btn:hover::before {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .choice-audio-btn:active {
+            transform: translateY(0) scale(1);
+        }
+        
+        .choice-audio-btn.playing {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            animation: choicePulse 1.5s infinite;
+        }
+        
+        @keyframes choicePulse {
+            0% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.7); }
+            70% { box-shadow: 0 0 0 8px rgba(40, 167, 69, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0); }
+        }
+        
+        .choice-button {
+            display: block;
+            width: 100%;
+            padding: 18px 25px;
+            margin: 12px 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            text-align: left;
+            box-shadow: 
+                0 4px 15px rgba(102, 126, 234, 0.3),
+                0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .choice-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .choice-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 8px 25px rgba(102, 126, 234, 0.4),
+                0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        .choice-button:hover::before {
+            left: 100%;
+        }
+        
+        .choice-button:active {
+            transform: translateY(0);
+            transition: transform 0.1s;
+        }
+        
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            font-weight: 700;
+            text-shadow: 
+                2px 2px 4px rgba(0, 0, 0, 0.3),
+                0 0 20px rgba(255, 255, 255, 0.2);
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: titleGlow 3s ease-in-out infinite alternate;
+        }
+        
+        @keyframes titleGlow {
+            0% { filter: drop-shadow(0 0 5px rgba(255, 107, 107, 0.5)); }
+            50% { filter: drop-shadow(0 0 20px rgba(78, 205, 196, 0.5)); }
+            100% { filter: drop-shadow(0 0 5px rgba(69, 183, 209, 0.5)); }
+        }
+        
+        .story-text {
+            font-size: 18px;
+            line-height: 1.8;
+            color: #2c3e50;
+            background: rgba(248, 249, 250, 0.8);
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            position: relative;
+        }
+        
+        .story-text::before {
+            content: '📖';
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            font-size: 20px;
+        }
+        
+        .hidden {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            height: 0 !important;
+            width: 0 !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            border: none !important;
+            overflow: hidden !important;
+        }
+        
+        .restart-btn {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            margin-top: 20px;
+        }
+        
+        .restart-btn:hover {
+            box-shadow: 
+                0 8px 25px rgba(76, 175, 80, 0.4),
+                0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        .home-btn {
+            background: linear-gradient(135deg, #ff7675 0%, #d63031 100%);
+            margin-top: 10px;
+        }
+        
+        .home-btn:hover {
+            box-shadow: 
+                0 8px 25px rgba(255, 118, 117, 0.4),
+                0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            margin: 25px 0;
+            overflow: hidden;
+            box-shadow: 
+                0 2px 4px rgba(0, 0, 0, 0.1) inset,
+                0 1px 2px rgba(255, 255, 255, 0.3);
+            position: relative;
+        }
+        
+        .progress-bar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                rgba(255, 255, 255, 0.3) 50%, 
+                transparent 100%);
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(200%); }
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1);
+            border-radius: 10px;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, 
+                transparent 30%, 
+                rgba(255, 255, 255, 0.5) 50%, 
+                transparent 70%);
+            animation: progressShine 3s infinite;
+        }
+        
+        @keyframes progressShine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(200%); }
+        }
+        
+        .scene-counter {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 25px;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: inline-block;
+        }
+        
+        .scene {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .scene:not(.hidden) {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { 
+                opacity: 0; 
+                transform: translateY(30px) scale(0.95);
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0) scale(1);
+            }
+        }
+        
+        
+        /* Navigation button styling */
+        .nav-link {
+            display: inline-block;
+            padding: 12px 24px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            text-decoration: none;
+            color: white;
+        }
+        
+        /* Choice explanation styling */
+        .choice-explanation {
+            background: linear-gradient(135deg, #e8f5e8 0%, #f0f8ff 100%);
+            border: 2px solid #4CAF50;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .choice-explanation::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: 15px;
+            background: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            font-size: 18px;
+            display: none;
+        }
+        
+        .choice-explanation h3 {
+            color: #2e7d32;
+            margin: 0 0 20px 0;
+            font-size: 18px;
+            font-weight: 600;
+            line-height: 1.6;
+            padding-top: 5px;
+        }
+        
+        .positive-feedback {
+            color: #2e7d32;
+            font-weight: bold;
+        }
+        
+        .negative-feedback {
+            color: #d32f2f;
+            font-weight: bold;
+        }
+        
+        .choice-explanation h3::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            font-size: 20px;
+            display: none;
+        }
+        
+        .choice-display {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 4px solid #4CAF50;
+        }
+        
+        .choice-display .english-text {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1565c0;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .choice-display .japanese-text {
+            font-size: 15px;
+            color: #2e7d32;
+            font-weight: 500;
+        }
+        
+        .explanation-text {
+            font-size: 14px;
+            color: #424242;
+            line-height: 1.6;
+            background: rgba(255, 255, 255, 0.6);
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 3px solid #81c784;
+        }
+        
+        /* Red theme for wrong choice explanations */
+        .choice-explanation.wrong {
+            background: linear-gradient(135deg, #fde8e8 0%, #ffebee 100%);
+            border: 2px solid #dc3545;
+        }
+        
+        .choice-explanation.wrong::before {
+            content: '';
+            display: none;
+        }
+        
+        .choice-explanation.wrong h3 {
+            color: #c62828;
+        }
+        
+        .choice-explanation.wrong h3::before {
+            content: '';
+            display: none;
+        }
+        
+        .choice-explanation.wrong .choice-display {
+            border-left: 4px solid #dc3545;
+        }
+        
+        .choice-explanation.wrong .choice-display .japanese-text {
+            color: #c62828;
+        }
+        
+        .choice-explanation.wrong .explanation-text {
+            border-left: 3px solid #ef5350;
+        }
+        
+        /* Feedback text color classes */
+        .positive-feedback {
+            color: #2e7d32 !important;
+            font-weight: 600;
+        }
+        
+        .negative-feedback {
+            color: #d32f2f !important;
+            font-weight: 600;
+        }
+        
+        /* AdSense スタイリング */
+        .adsense-container {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .adsense-label {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 10px;
+        }
+        
+        /* 前の問題表示 */
+        .previous-question {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #4CAF50;
+            margin-bottom: 20px;
+        }
+        
+        .previous-question .english-text {
+            font-size: 16px;
+            color: #2e7d32;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .previous-question .japanese-text {
+            font-size: 14px;
+            color: #666;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- Navigation -->
+    <div style="text-align: left; margin-bottom: 20px;">
+        <a href="index.html" class="nav-link">← ルール説明に戻る</a>
+    </div>
+    
+    <!-- AdSense 広告 (ヘッダー下) -->
+    <div class="adsense-container">
+        <div class="adsense-label">広告</div>
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-XXXXXXXXXXXXXXXXX"
+             data-ad-slot="XXXXXXXXXX"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+    
+    <!-- Progress Bar -->
+    <div style="text-align: center; margin: 20px 0;">
+        <div class="scene-counter" id="scene-progress" style="margin-bottom: 8px;">Scene 1 of 9</div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress-fill" style="width: 11.11%;"></div>
+        </div>
+    </div>
+    
+    <div class="story-container">
+        <div id="scene1" class="scene">
+            <div class="story-text" data-scene="scene1">
+                <p>Once upon a time, there was an old woman. She went to the river to wash clothes.</p>
+                <p>In the river, she saw a big peach! The peach was very big and round.</p>
+                <p>What should the old woman do?</p>
+            </div>
+            <div class="audio-controls">
+                <button class="audio-btn" onclick="playSceneAudio('scene1')">🔊 英語音声を再生</button>
+                <button class="audio-btn" onclick="stopAudio()">⏹️ 停止</button>
+            </div>
+            <div class="choices">
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="selectChoiceAndGoToScene('scene2', 'Take the peach home')">Take the peach home</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Take the peach home')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene1', 'Leave the peach in the river')">Leave the peach in the river</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Leave the peach in the river')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene1', 'Throw the peach away')">Throw the peach away</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Throw the peach away')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="scene2" class="scene hidden">
+            <!-- Choice explanation area (hidden by default) -->
+            <div id="scene2-explanation" class="choice-explanation hidden">
+                <h3>前の問題</h3>
+                <div class="previous-question">
+                    <div class="english-text" id="scene2-previous-question"></div>
+                    <div class="japanese-text" id="scene2-previous-question-translation"></div>
+                </div>
+                
+                <h3>あなたが選んだ選択肢</h3>
+                <div class="choice-display">
+                    <div class="english-text">
+                        <span id="scene2-choice-text"></span>
+                    </div>
+                    <div class="japanese-text" id="scene2-choice-translation"></div>
+                </div>
+                <div class="explanation-text" id="scene2-choice-explanation"></div>
+            </div>
+            <div class="section-divider hidden" id="scene2-divider" style="height: 20px; border-bottom: 1px solid rgba(102, 126, 234, 0.2); margin: 20px 0;"></div>
+            
+            <div class="story-text" data-scene="scene2">
+                <p><span class="positive-feedback">Good choice!</span> The old woman took the peach home.</p>
+                <p>She showed it to her husband. They wanted to eat the peach.</p>
+                <p>When they cut the peach, a baby boy came out!</p>
+                <p>"Hello! I am Momotaro!" said the boy.</p>
+                <p>What should they do?</p>
+            </div>
+            <div class="audio-controls">
+                <button class="audio-btn" onclick="playSceneAudio('scene2')">🔊 英語音声を再生</button>
+                <button class="audio-btn" onclick="stopAudio()">⏹️ 停止</button>
+            </div>
+            <div class="choices">
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="selectChoiceAndGoToScene('scene3', 'Take care of Momotaro as their son')">Take care of Momotaro as their son</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Take care of Momotaro as their son')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene2', 'Be scared and run away')">Be scared and run away</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Be scared and run away')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene2', 'Put him back in the peach')">Put him back in the peach</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Put him back in the peach')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="scene3" class="scene hidden">
+            <!-- Choice explanation area (hidden by default) -->
+            <div id="scene3-explanation" class="choice-explanation hidden">
+                <h3>前の問題</h3>
+                <div class="previous-question">
+                    <div class="english-text" id="scene3-previous-question"></div>
+                    <div class="japanese-text" id="scene3-previous-question-translation"></div>
+                </div>
+                
+                <h3>あなたが選んだ選択肢</h3>
+                <div class="choice-display">
+                    <div class="english-text">
+                        <span id="scene3-choice-text"></span>
+                    </div>
+                    <div class="japanese-text" id="scene3-choice-translation"></div>
+                </div>
+                <div class="explanation-text" id="scene3-choice-explanation"></div>
+            </div>
+            <div class="section-divider hidden" id="scene3-divider" style="height: 20px; border-bottom: 1px solid rgba(102, 126, 234, 0.2); margin: 20px 0;"></div>
+            
+            <div class="story-text" data-scene="scene3">
+                <p><span class="positive-feedback">Perfect!</span> The old man and woman loved Momotaro like their own son.</p>
+                <p>Momotaro grew up to be strong and kind.</p>
+                <p>One day, Momotaro heard about bad demons on Demon Island. They were stealing from people!</p>
+                <p>What should Momotaro do?</p>
+            </div>
+            <div class="audio-controls">
+                <button class="audio-btn" onclick="playSceneAudio('scene3')">🔊 英語音声を再生</button>
+                <button class="audio-btn" onclick="stopAudio()">⏹️ 停止</button>
+            </div>
+            <div class="choices">
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="selectChoiceAndGoToScene('scene4', 'Go to fight the demons')">Go to fight the demons</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Go to fight the demons')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene3', 'Stay home and do nothing')">Stay home and do nothing</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Stay home and do nothing')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene3', 'Run away from the demons')">Run away from the demons</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Run away from the demons')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="scene4" class="scene hidden">
+            <!-- Choice explanation area (hidden by default) -->
+            <div id="scene4-explanation" class="choice-explanation hidden">
+                <h3>前の問題</h3>
+                <div class="previous-question">
+                    <div class="english-text" id="scene4-previous-question"></div>
+                    <div class="japanese-text" id="scene4-previous-question-translation"></div>
+                </div>
+                
+                <h3>あなたが選んだ選択肢</h3>
+                <div class="choice-display">
+                    <div class="english-text">
+                        <span id="scene4-choice-text"></span>
+                    </div>
+                    <div class="japanese-text" id="scene4-choice-translation"></div>
+                </div>
+                <div class="explanation-text" id="scene4-choice-explanation"></div>
+            </div>
+            <div class="section-divider hidden" id="scene4-divider" style="height: 20px; border-bottom: 1px solid rgba(102, 126, 234, 0.2); margin: 20px 0;"></div>
+            
+            <div class="story-text" data-scene="scene4">
+                <p><span class="positive-feedback">Brave choice!</span> Momotaro decided to go to Demon Island.</p>
+                <p>His mother made special rice balls for his journey.</p>
+                <p>On the way, Momotaro met a dog. The dog was hungry.</p>
+                <p>What should Momotaro do?</p>
+            </div>
+            <div class="audio-controls">
+                <button class="audio-btn" onclick="playSceneAudio('scene4')">🔊 英語音声を再生</button>
+                <button class="audio-btn" onclick="stopAudio()">⏹️ 停止</button>
+            </div>
+            <div class="choices">
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="selectChoiceAndGoToScene('scene5', 'Give the dog a rice ball')">Give the dog a rice ball</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Give the dog a rice ball')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene4', 'Tell the dog to go away')">Tell the dog to go away</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Tell the dog to go away')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene4', 'Eat all the rice balls himself')">Eat all the rice balls himself</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Eat all the rice balls himself')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="scene5" class="scene hidden">
+            <!-- Choice explanation area (hidden by default) -->
+            <div id="scene5-explanation" class="choice-explanation hidden">
+                <h3>前の問題</h3>
+                <div class="previous-question">
+                    <div class="english-text" id="scene5-previous-question"></div>
+                    <div class="japanese-text" id="scene5-previous-question-translation"></div>
+                </div>
+                
+                <h3>あなたが選んだ選択肢</h3>
+                <div class="choice-display">
+                    <div class="english-text">
+                        <span id="scene5-choice-text"></span>
+                    </div>
+                    <div class="japanese-text" id="scene5-choice-translation"></div>
+                </div>
+                <div class="explanation-text" id="scene5-choice-explanation"></div>
+            </div>
+            <div class="section-divider hidden" id="scene5-divider" style="height: 20px; border-bottom: 1px solid rgba(102, 126, 234, 0.2); margin: 20px 0;"></div>
+            
+            <div class="story-text" data-scene="scene5">
+                <p><span class="positive-feedback">Kind choice!</span> Momotaro gave the dog a rice ball.</p>
+                <p>"Thank you!" said the dog. "I will help you fight the demons!"</p>
+                <p>Next, they met a monkey. The monkey was also hungry.</p>
+                <p>What should Momotaro do?</p>
+            </div>
+            <div class="audio-controls">
+                <button class="audio-btn" onclick="playSceneAudio('scene5')">🔊 英語音声を再生</button>
+                <button class="audio-btn" onclick="stopAudio()">⏹️ 停止</button>
+            </div>
+            <div class="choices">
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="selectChoiceAndGoToScene('scene6', 'Give the monkey a rice ball too')">Give the monkey a rice ball too</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Give the monkey a rice ball too')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene5', 'Keep the rice balls for himself')">Keep the rice balls for himself</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Keep the rice balls for himself')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene5', 'Tell the monkey to find his own food')">Tell the monkey to find his own food</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Tell the monkey to find his own food')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="scene6" class="scene hidden">
+            <!-- Choice explanation area (hidden by default) -->
+            <div id="scene6-explanation" class="choice-explanation hidden">
+                <h3>前の問題</h3>
+                <div class="previous-question">
+                    <div class="english-text" id="scene6-previous-question"></div>
+                    <div class="japanese-text" id="scene6-previous-question-translation"></div>
+                </div>
+                
+                <h3>あなたが選んだ選択肢</h3>
+                <div class="choice-display">
+                    <div class="english-text">
+                        <span id="scene6-choice-text"></span>
+                    </div>
+                    <div class="japanese-text" id="scene6-choice-translation"></div>
+                </div>
+                <div class="explanation-text" id="scene6-choice-explanation"></div>
+            </div>
+            <div class="section-divider hidden" id="scene6-divider" style="height: 20px; border-bottom: 1px solid rgba(102, 126, 234, 0.2); margin: 20px 0;"></div>
+            
+            <div class="story-text" data-scene="scene6">
+                <p><span class="positive-feedback">Great!</span> Momotaro shared another rice ball with the monkey.</p>
+                <p>"I will help you too!" said the monkey happily.</p>
+                <p>Then they met a bird called a pheasant. The pheasant was hungry as well.</p>
+                <p>What should Momotaro do with his last rice ball?</p>
+            </div>
+            <div class="audio-controls">
+                <button class="audio-btn" onclick="playSceneAudio('scene6')">🔊 英語音声を再生</button>
+                <button class="audio-btn" onclick="stopAudio()">⏹️ 停止</button>
+            </div>
+            <div class="choices">
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="selectChoiceAndGoToScene('scene7', 'Share the last rice ball with the pheasant')">Share the last rice ball with the pheasant</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Share the last rice ball with the pheasant')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene6', 'Keep the last rice ball for himself')">Keep the last rice ball for himself</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Keep the last rice ball for himself')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene6', 'Tell the pheasant it is too late')">Tell the pheasant it's too late</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Tell the pheasant it is too late')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="scene7" class="scene hidden">
+            <!-- Choice explanation area (hidden by default) -->
+            <div id="scene7-explanation" class="choice-explanation hidden">
+                <h3>前の問題</h3>
+                <div class="previous-question">
+                    <div class="english-text" id="scene7-previous-question"></div>
+                    <div class="japanese-text" id="scene7-previous-question-translation"></div>
+                </div>
+                
+                <h3>あなたが選んだ選択肢</h3>
+                <div class="choice-display">
+                    <div class="english-text">
+                        <span id="scene7-choice-text"></span>
+                    </div>
+                    <div class="japanese-text" id="scene7-choice-translation"></div>
+                </div>
+                <div class="explanation-text" id="scene7-choice-explanation"></div>
+            </div>
+            <div class="section-divider hidden" id="scene7-divider" style="height: 20px; border-bottom: 1px solid rgba(102, 126, 234, 0.2); margin: 20px 0;"></div>
+            
+            <div class="story-text" data-scene="scene7">
+                <p><span class="positive-feedback">Wonderful!</span> Momotaro shared his last rice ball with the pheasant.</p>
+                <p>"I will help you fight the demons!" said the pheasant.</p>
+                <p>Now Momotaro had three animal friends. They reached Demon Island.</p>
+                <p>The demons' castle was very big and scary. How should they attack?</p>
+            </div>
+            <div class="audio-controls">
+                <button class="audio-btn" onclick="playSceneAudio('scene7')">🔊 英語音声を再生</button>
+                <button class="audio-btn" onclick="stopAudio()">⏹️ 停止</button>
+            </div>
+            <div class="choices">
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="selectChoiceAndGoToScene('scene8', 'Work together as a team')">Work together as a team</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Work together as a team')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene7', 'Let Momotaro fight alone')">Let Momotaro fight alone</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Let Momotaro fight alone')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene7', 'Run away because it is too scary')">Run away because it's too scary</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Run away because it is too scary')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="scene8" class="scene hidden">
+            <!-- Choice explanation area (hidden by default) -->
+            <div id="scene8-explanation" class="choice-explanation hidden">
+                <h3>前の問題</h3>
+                <div class="previous-question">
+                    <div class="english-text" id="scene8-previous-question"></div>
+                    <div class="japanese-text" id="scene8-previous-question-translation"></div>
+                </div>
+                
+                <h3>あなたが選んだ選択肢</h3>
+                <div class="choice-display">
+                    <div class="english-text">
+                        <span id="scene8-choice-text"></span>
+                    </div>
+                    <div class="japanese-text" id="scene8-choice-translation"></div>
+                </div>
+                <div class="explanation-text" id="scene8-choice-explanation"></div>
+            </div>
+            <div class="section-divider hidden" id="scene8-divider" style="height: 20px; border-bottom: 1px solid rgba(102, 126, 234, 0.2); margin: 20px 0;"></div>
+            
+            <div class="story-text" data-scene="scene8">
+                <p>Perfect teamwork! The dog bit the demons' legs.</p>
+                <p>The monkey jumped on their heads. The pheasant flew and scratched their faces.</p>
+                <p>Momotaro fought with his sword. The demons were scared!</p>
+                <p>"Please stop! We give up!" said the demon king.</p>
+                <p>What should Momotaro do?</p>
+            </div>
+            <div class="audio-controls">
+                <button class="audio-btn" onclick="playSceneAudio('scene8')">🔊 英語音声を再生</button>
+                <button class="audio-btn" onclick="stopAudio()">⏹️ 停止</button>
+            </div>
+            <div class="choices">
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="selectChoiceAndGoToScene('scene9', 'Make the demons promise to be good')">Make the demons promise to be good</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Make the demons promise to be good')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene8', 'Fight them more to hurt them')">Fight them more to hurt them</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Fight them more to hurt them')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene8', 'Take all their treasure and leave')">Take all their treasure and leave</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Take all their treasure and leave')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="scene9" class="scene hidden">
+            <!-- Choice explanation area (hidden by default) -->
+            <div id="scene9-explanation" class="choice-explanation hidden">
+                <h3>前の問題</h3>
+                <div class="previous-question">
+                    <div class="english-text" id="scene9-previous-question"></div>
+                    <div class="japanese-text" id="scene9-previous-question-translation"></div>
+                </div>
+                
+                <h3>あなたが選んだ選択肢</h3>
+                <div class="choice-display">
+                    <div class="english-text">
+                        <span id="scene9-choice-text"></span>
+                    </div>
+                    <div class="japanese-text" id="scene9-choice-translation"></div>
+                </div>
+                <div class="explanation-text" id="scene9-choice-explanation"></div>
+            </div>
+            <div class="section-divider hidden" id="scene9-divider" style="height: 20px; border-bottom: 1px solid rgba(102, 126, 234, 0.2); margin: 20px 0;"></div>
+            
+            <div class="story-text" data-scene="scene9">
+                <p>🎉 <span class="positive-feedback">Excellent ending!</span> 🎉</p>
+                <p>Momotaro was kind but strong. The demons promised to stop being bad.</p>
+                <p>They gave back all the treasure they had stolen from people.</p>
+                <p>Momotaro and his three friends went home as heroes!</p>
+                <p>The old man and woman were so happy and proud.</p>
+                <p><strong>You completed the Momotaro story correctly! Great job! 👏</strong></p>
+            </div>
+            <div class="audio-controls">
+                <button class="audio-btn" onclick="playSceneAudio('scene9')">🔊 英語音声を再生</button>
+                <button class="audio-btn" onclick="stopAudio()">⏹️ 停止</button>
+            </div>
+            <div style="padding: 20px 0;">
+                
+            </div>
+            <div class="choices">
+                <button class="choice-button restart-btn" onclick="restartGame()">Play Again</button>
+                <button class="choice-button home-btn" onclick="location.href='index.html'">← ルール説明に戻る</button>
+            </div>
+        </div>
+
+        <div id="wrong-message" class="scene hidden">
+            <!-- Choice explanation area for wrong choices -->
+            <div id="wrong-message-explanation" class="choice-explanation wrong hidden">
+                <h3>あなたが選んだ選択肢</h3>
+                <div class="choice-display">
+                    <div class="english-text">
+                        <span id="wrong-message-choice-text"></span>
+                    </div>
+                    <div class="japanese-text" id="wrong-message-choice-translation"></div>
+                </div>
+                <div class="explanation-text" id="wrong-message-choice-explanation"></div>
+            </div>
+            <div class="section-divider hidden" id="wrong-message-divider" style="height: 20px; border-bottom: 1px solid rgba(220, 53, 69, 0.2); margin: 20px 0;"></div>
+            
+            <div class="story-text" data-scene="wrong-message">
+                <p>🚫 <span class="negative-feedback">Oops!</span> That choice doesn't match the real Momotaro story.</p>
+                <p>In the traditional story, Momotaro is brave, kind, and makes good choices.</p>
+                <p>Try again and choose the answer that shows kindness and bravery!</p>
+            </div>
+            <div class="choices">
+                <button class="choice-button" onclick="goBack()">Try Again</button>
+                <button class="choice-button restart-btn" onclick="restartGame()">Start Over</button>
+                <button class="choice-button home-btn" onclick="location.href='index.html'">← ルール説明に戻る</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game state variables
+        let currentScene = 'scene1';
+        let previousScene = 'scene1';
+        let currentSceneNumber = 1;
+        const totalScenes = 9;
+        
+        // Audio variables
+        let currentSpeech = null;
+
+        // Progress tracking
+        function updateProgress() {
+            const progressPercentage = (currentSceneNumber / totalScenes) * 100;
+            document.getElementById('progress-fill').style.width = progressPercentage + '%';
+            document.getElementById('scene-progress').textContent = `Scene ${currentSceneNumber} of ${totalScenes}`;
+        }
+
+        // Store selected choice information
+        let selectedChoiceInfo = {
+            text: '',
+            translation: '',
+            explanation: ''
+        };
+        
+        // Store previous question information
+        let previousQuestionInfo = {
+            text: '',
+            translation: ''
+        };
+        
+        // Question translations
+        const questionTranslations = {
+            "One morning, she felt very tired. What should she do?": "ある朝、彼女はとても疲れを感じました。彼女はどうすべきでしょうか？",
+            "In the river, she saw something floating in the water. What was it?": "川で、彼女は水に浮かんでいる何かを見ました。それは何でしたか？",
+            "What should the old woman do?": "おばあさんはどうすべきでしょうか？",
+            "What should they do?": "彼らはどうすべきでしょうか？",
+            "What should Momotaro do?": "桃太郎はどうすべきでしょうか？",
+            "What should Momotaro do with his last rice ball?": "桃太郎は最後のおにぎりをどうすべきでしょうか？",
+            "How should they attack?": "彼らはどのように攻撃すべきでしょうか？"
+        };
+
+        // Translation dictionary for choices (simplified for short version)
+        const choiceTranslations = {
+            // Scene 1
+            "Take the peach home": {
+                translation: "桃を家に持ち帰る",
+                explanation: "正解！昔話では、お婆さんは桃を大切に家に持ち帰ります。これが物語の始まりです。"
+            },
+            "Leave the peach in the river": {
+                translation: "桃を川に置いておく",
+                explanation: "この選択では物語が進みません。お婆さんは桃を持ち帰るのが正しい選択です。"
+            },
+            "Throw the peach away": {
+                translation: "桃を捨てる",
+                explanation: "この選択では桃太郎が生まれません。桃は大切な宝物なので持ち帰るべきです。"
+            },
+
+            // Scene 2
+            "Take care of Momotaro as their son": {
+                translation: "桃太郎を息子として育てる",
+                explanation: "正解！お爺さんとお婆さんは桃太郎を愛情深く育てます。これが物語の重要な部分です。"
+            },
+            "Be scared and run away": {
+                translation: "怖がって逃げる",
+                explanation: "昔話では、お爺さんとお婆さんは桃太郎を温かく迎え入れます。恐れることはありません。"
+            },
+            "Put him back in the peach": {
+                translation: "彼を桃に戻す",
+                explanation: "せっかく生まれた桃太郎を桃に戻すのは間違いです。彼を家族として迎えるべきです。"
+            },
+
+            // Scene 3
+            "Go to fight the demons": {
+                translation: "鬼退治に行く",
+                explanation: "正解！桃太郎は勇敢に鬼退治に向かいます。正義感の強い桃太郎らしい選択です。"
+            },
+            "Stay home and do nothing": {
+                translation: "家にいて何もしない",
+                explanation: "桃太郎は正義感が強く、困っている人を助けます。何もしないのは桃太郎らしくありません。"
+            },
+            "Run away from the demons": {
+                translation: "鬼から逃げる",
+                explanation: "勇敢な桃太郎は鬼から逃げません。困っている人々を助けるために戦います。"
+            },
+
+            // Scene 4
+            "Give the dog a rice ball": {
+                translation: "犬にきびだんごをあげる",
+                explanation: "正解！桃太郎の優しさを表す重要な場面です。動物たちとの友情が始まります。"
+            },
+            "Tell the dog to go away": {
+                translation: "犬に立ち去るよう言う",
+                explanation: "桃太郎は優しい心の持ち主です。困っている動物を助けるのが桃太郎らしい行動です。"
+            },
+            "Eat all the rice balls himself": {
+                translation: "きびだんごを全部自分で食べる",
+                explanation: "桃太郎は分け合うことを大切にします。独り占めするのは桃太郎らしくありません。"
+            },
+
+            // Scene 5
+            "Give the monkey a rice ball too": {
+                translation: "猿にもきびだんごをあげる",
+                explanation: "正解！桃太郎の優しさが続きます。仲間を増やしていく大切な場面です。"
+            },
+            "Keep the rice balls for himself": {
+                translation: "きびだんごを自分のために取っておく",
+                explanation: "桃太郎は分かち合うことを大切にします。動物たちと友達になることが重要です。"
+            },
+            "Tell the monkey to find his own food": {
+                translation: "猿に自分で食べ物を見つけるよう言う",
+                explanation: "困っている仲間を助けるのが桃太郎です。冷たく突き放すのは間違いです。"
+            },
+
+            // Scene 6
+            "Share the last rice ball with the pheasant": {
+                translation: "最後のきびだんごをキジと分ける",
+                explanation: "正解！最後の一つも分け与える桃太郎の優しさが光ります。真の仲間が完成します。"
+            },
+            "Keep the last rice ball for himself": {
+                translation: "最後のきびだんごを自分のために取っておく",
+                explanation: "桃太郎は自分のことより仲間のことを考えます。分け合うことが大切です。"
+            },
+            "Tell the pheasant it is too late": {
+                translation: "キジに遅すぎると言う",
+                explanation: "桃太郎は誰に対しても優しく接します。「遅すぎる」なんて言いません。"
+            },
+
+            // Scene 7
+            "Work together as a team": {
+                translation: "チームとして協力する",
+                explanation: "正解！仲間との協力が勝利の鍵です。桃太郎と動物たちの絆が活かされます。"
+            },
+            "Let Momotaro fight alone": {
+                translation: "桃太郎一人で戦わせる",
+                explanation: "せっかく仲間になったのに一人で戦うのはもったいないです。みんなで協力しましょう。"
+            },
+            "Run away because it is too scary": {
+                translation: "怖いので逃げる",
+                explanation: "勇敢な桃太郎たちは困難から逃げません。みんなで力を合わせて戦います。"
+            },
+
+            // Scene 8
+            "Make the demons promise to be good": {
+                translation: "鬼たちに良い鬼になると約束させる",
+                explanation: "正解！桃太郎は優しさと強さを持っています。復讐ではなく改心を促すのが桃太郎らしいです。"
+            },
+            "Fight them more to hurt them": {
+                translation: "もっと戦って鬼たちを傷つける",
+                explanation: "桃太郎は必要以上に暴力を振るいません。優しさも持ち合わせているのが桃太郎です。"
+            },
+            "Take all their treasure and leave": {
+                translation: "宝物を全部取って立ち去る",
+                explanation: "桃太郎の目的は宝物ではなく、人々を守ることです。欲深くはありません。"
+            }
+        };
+
+        function displayChoiceExplanation(sceneId) {
+            // Safe implementation using pre-existing HTML elements
+            const explanationDiv = document.getElementById(sceneId + '-explanation');
+            const dividerDiv = document.getElementById(sceneId + '-divider');
+            const choiceTextSpan = document.getElementById(sceneId + '-choice-text');
+            const translationDiv = document.getElementById(sceneId + '-choice-translation');
+            const explanationTextDiv = document.getElementById(sceneId + '-choice-explanation');
+            
+            // Previous question elements
+            const previousQuestionDiv = document.getElementById(sceneId + '-previous-question');
+            const previousQuestionTranslationDiv = document.getElementById(sceneId + '-previous-question-translation');
+            
+            // Check if all elements exist (safety check)
+            if (!explanationDiv || !choiceTextSpan || !translationDiv || !explanationTextDiv) {
+                console.log('Explanation elements not found for ' + sceneId);
+                return;
+            }
+            
+            // Populate the choice content safely using textContent
+            choiceTextSpan.textContent = selectedChoiceInfo.text;
+            translationDiv.textContent = selectedChoiceInfo.translation;
+            explanationTextDiv.textContent = selectedChoiceInfo.explanation;
+            
+            // Populate previous question if elements exist
+            if (previousQuestionDiv && previousQuestionTranslationDiv && previousQuestionInfo.text) {
+                previousQuestionDiv.textContent = previousQuestionInfo.text;
+                previousQuestionTranslationDiv.textContent = previousQuestionInfo.translation;
+            }
+            
+            // Show the explanation elements
+            explanationDiv.classList.remove('hidden');
+            if (dividerDiv) {
+                dividerDiv.classList.remove('hidden');
+            }
+        }
+
+        function selectChoiceAndGoToScene(nextSceneId, selectedChoice) {
+            // Extract previous question from current scene
+            const currentSceneElement = document.getElementById(currentScene);
+            if (currentSceneElement) {
+                const storyTextElement = currentSceneElement.querySelector('.story-text');
+                if (storyTextElement) {
+                    const paragraphs = storyTextElement.querySelectorAll('p');
+                    if (paragraphs.length > 0) {
+                        const lastParagraph = paragraphs[paragraphs.length - 1];
+                        const questionText = lastParagraph.textContent.trim();
+                        
+                        // Store previous question info
+                        previousQuestionInfo = {
+                            text: questionText,
+                            translation: questionTranslations[questionText] || 'この問題の翻訳が見つかりません'
+                        };
+                    }
+                }
+            }
+            
+            // Look up translation and explanation from the dictionary
+            const choiceData = choiceTranslations[selectedChoice];
+            
+            if (choiceData) {
+                // Store the selected choice information
+                selectedChoiceInfo = {
+                    text: selectedChoice,
+                    translation: choiceData.translation,
+                    explanation: choiceData.explanation
+                };
+            } else {
+                // Fallback if translation not found
+                selectedChoiceInfo = {
+                    text: selectedChoice,
+                    translation: '翻訳が見つかりません',
+                    explanation: 'この選択肢の説明が見つかりません。'
+                };
+            }
+            
+            goToScene(nextSceneId);
+            
+            // Display the explanation
+            displayChoiceExplanation(nextSceneId);
+        }
+
+        function goToScene(sceneId, selectedChoice = '') {
+            // Hide all scenes first
+            const allScenes = document.querySelectorAll('.scene');
+            allScenes.forEach(scene => scene.classList.add('hidden'));
+            
+            // Show new scene
+            previousScene = currentScene;
+            currentScene = sceneId;
+            
+            // Update scene number
+            if (sceneId.startsWith('scene')) {
+                currentSceneNumber = parseInt(sceneId.replace('scene', ''));
+                updateProgress();
+            }
+            
+            // Show new scene
+            const newSceneElement = document.getElementById(sceneId);
+            if (newSceneElement) {
+                newSceneElement.classList.remove('hidden');
+                
+                // Shuffle choices for the new scene
+                initializeSceneChoices(sceneId);
+                
+                // Smooth scroll to top
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                
+                // Add fade-in animation
+                newSceneElement.classList.add('fade-in');
+                setTimeout(() => {
+                    newSceneElement.classList.remove('fade-in');
+                }, 800);
+            } else {
+                console.error('Scene element not found: ' + sceneId);
+            }
+        }
+
+        function showWrongChoice(fromScene, selectedChoice = '') {            
+            previousScene = fromScene;
+            
+            // Look up translation and explanation from the dictionary
+            const choiceData = choiceTranslations[selectedChoice];
+            
+            if (choiceData) {
+                // Store the selected choice information
+                selectedChoiceInfo = {
+                    text: selectedChoice,
+                    translation: choiceData.translation,
+                    explanation: choiceData.explanation
+                };
+            } else {
+                // Fallback if translation not found
+                selectedChoiceInfo = {
+                    text: selectedChoice,
+                    translation: '翻訳が見つかりません',
+                    explanation: 'この選択肢の説明が見つかりません。'
+                };
+            }
+            
+            goToScene('wrong-message');
+            
+            // Display the explanation
+            displayChoiceExplanation('wrong-message');
+        }
+
+        function goBack() {
+            // Simple direct approach
+            currentSceneNumber = parseInt(previousScene.replace('scene', ''));
+            goToScene(previousScene);
+        }
+
+        function restartGame() {
+            // Hide all scenes
+            const scenes = document.querySelectorAll('.scene');
+            scenes.forEach(scene => {
+                scene.classList.add('hidden');
+                // Hide any visible explanations
+                const explanation = scene.querySelector('.choice-explanation');
+                const divider = scene.querySelector('.section-divider');
+                if (explanation) explanation.classList.add('hidden');
+                if (divider) divider.classList.add('hidden');
+            });
+            
+            // Reset game state
+            currentScene = 'scene1';
+            previousScene = 'scene1';
+            currentSceneNumber = 1;
+            selectedChoiceInfo = { text: '', translation: '', explanation: '' };
+            
+            // Show first scene and update progress
+            document.getElementById('scene1').classList.remove('hidden');
+            updateProgress();
+            
+            // Shuffle choices for the first scene
+            initializeSceneChoices('scene1');
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Audio Functions
+        function playSceneAudio(sceneId) {
+            // Stop any current speech
+            stopAudio();
+            
+            const storyTextDiv = document.querySelector(`[data-scene="${sceneId}"]`);
+            if (!storyTextDiv) return;
+            
+            const paragraphs = storyTextDiv.querySelectorAll('p');
+            let textToSpeak = '';
+            
+            // Combine all paragraph text, removing emojis and special characters for better speech
+            paragraphs.forEach(p => {
+                let text = p.textContent || p.innerText;
+                // Clean text for speech (remove emojis, special symbols)
+                text = text.replace(/[🍑🎉🏆🚫🔊⏹️]/g, '');
+                text = text.replace(/[^\w\s.,!?-]/g, '');
+                textToSpeak += text + ' ';
+            });
+            
+            if (textToSpeak.trim() === '') return;
+            
+            // Check if speech synthesis is supported
+            if ('speechSynthesis' in window) {
+                currentSpeech = new SpeechSynthesisUtterance(textToSpeak);
+                
+                // Configure speech settings
+                currentSpeech.lang = 'en-US';
+                currentSpeech.rate = 0.6; // Slower for learning
+                currentSpeech.pitch = 1.0;
+                currentSpeech.volume = 1.0;
+                
+                // Visual feedback during speech
+                const playButton = document.querySelector(`button[onclick="playSceneAudio('${sceneId}')"]`);
+                if (playButton) {
+                    playButton.classList.add('playing');
+                    playButton.innerHTML = '🔊 再生中...';
+                }
+                
+                // Event handlers
+                currentSpeech.onend = function() {
+                    resetAudioButtons();
+                };
+                
+                currentSpeech.onerror = function() {
+                    resetAudioButtons();
+                };
+                
+                // Start speech
+                speechSynthesis.speak(currentSpeech);
+            } else {
+                alert('お使いのブラウザは音声機能をサポートしていません。');
+            }
+        }
+        
+        function stopAudio() {
+            if (currentSpeech) {
+                speechSynthesis.cancel();
+                currentSpeech = null;
+            }
+            resetAudioButtons();
+            // Remove all reading highlights
+            document.querySelectorAll('.story-text p').forEach(p => p.classList.remove('reading'));
+        }
+        
+        function resetAudioButtons() {
+            document.querySelectorAll('.audio-btn').forEach(btn => {
+                if (btn.innerHTML.includes('再生中') || btn.classList.contains('playing')) {
+                    btn.classList.remove('playing');
+                    btn.innerHTML = '🔊 英語音声を再生';
+                }
+            });
+        }
+
+        // Function to play individual choice text
+        function playChoiceAudio(choiceText) {
+            // Stop any current speech
+            stopAudio();
+            
+            if (!choiceText || choiceText.trim() === '') return;
+            
+            // Check if speech synthesis is supported
+            if ('speechSynthesis' in window) {
+                currentSpeech = new SpeechSynthesisUtterance(choiceText);
+                
+                // Configure speech settings
+                currentSpeech.lang = 'en-US';
+                currentSpeech.rate = 0.7; // Slower for individual choice pronunciation
+                currentSpeech.pitch = 1.0;
+                currentSpeech.volume = 1.0;
+                
+                // Visual feedback during speech
+                const clickedButton = event.target;
+                if (clickedButton && clickedButton.classList.contains('choice-audio-btn')) {
+                    clickedButton.classList.add('playing');
+                }
+                
+                // Event handlers
+                currentSpeech.onend = function() {
+                    document.querySelectorAll('.choice-audio-btn').forEach(btn => {
+                        btn.classList.remove('playing');
+                    });
+                };
+                
+                currentSpeech.onerror = function() {
+                    document.querySelectorAll('.choice-audio-btn').forEach(btn => {
+                        btn.classList.remove('playing');
+                    });
+                };
+                
+                // Start speech
+                speechSynthesis.speak(currentSpeech);
+            } else {
+                alert('お使いのブラウザは音声機能をサポートしていません。');
+            }
+        }
+
+        function playSelectedChoiceAudio(sceneId) {
+            if (selectedChoiceInfo && selectedChoiceInfo.text) {
+                playChoiceAudio(selectedChoiceInfo.text);
+            }
+        }
+
+        // Choice shuffling functions
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function shuffleChoices(sceneId) {
+            const scene = document.getElementById(sceneId);
+            if (!scene) return;
+            
+            const choicesContainer = scene.querySelector('.choices');
+            if (!choicesContainer) return;
+            
+            const choiceContainers = Array.from(choicesContainer.querySelectorAll('.choice-container'));
+            if (choiceContainers.length > 1) {
+                shuffleArray(choiceContainers);
+                choiceContainers.forEach(container => {
+                    choicesContainer.appendChild(container);
+                });
+            }
+        }
+
+        function initializeSceneChoices(sceneId) {
+            // Shuffle choices when scene is displayed
+            shuffleChoices(sceneId);
+        }
+
+        // Initialize progress on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateProgress();
+            // Shuffle choices for the initial scene
+            initializeSceneChoices('scene1');
+        });
+    </script>
+</body>
+</html>

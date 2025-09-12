@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cinderella Extended Adventure - English Gamebook</title>
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXXX" 
+            crossorigin="anonymous"></script>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'ヒラギノ角ゴシック', 'Yu Gothic Medium', '游ゴシック Medium', YuGothic, '游ゴシック体', 'Meiryo', Arial, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #e3f2fd 0%, #f8bbd9 100%);
+            min-height: 100vh;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(227, 242, 253, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(248, 187, 217, 0.2) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .story-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.1),
+                0 2px 8px rgba(255, 255, 255, 0.2) inset;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .story-container::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #e3f2fd, #f8bbd9, #e3f2fd, #f8bbd9, #e3f2fd);
+            border-radius: 22px;
+            z-index: -1;
+            opacity: 0.1;
+        }
+        
+        .choices {
+            margin-top: 20px;
+        }
+        
+        /* Audio controls styling */
+        .audio-controls {
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            background-color: rgba(248, 249, 250, 0.8);
+            border-radius: 12px;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            backdrop-filter: blur(10px);
+        }
+        
+        .audio-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 0 6px;
+            background: linear-gradient(135deg, #17a2b8 0%, #117a8b 100%);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 3px 12px rgba(23, 162, 184, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .audio-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 16px rgba(23, 162, 184, 0.4);
+        }
+        
+        .audio-btn:active {
+            transform: translateY(0);
+        }
+        
+        .audio-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s;
+        }
+        
+        .audio-btn:hover::before {
+            left: 100%;
+        }
+        
+        .choice-container {
+            display: flex;
+            align-items: center;
+            margin: 8px 0;
+            gap: 8px;
+        }
+        
+        .choice-button-main {
+            flex: 1;
+            padding: 12px 16px;
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 3px 12px rgba(40, 167, 69, 0.3);
+            text-align: left;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .choice-button-main:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(40, 167, 69, 0.4);
+        }
+        
+        .choice-audio-btn {
+            padding: 8px 12px;
+            background: linear-gradient(135deg, #6f42c1 0%, #5a32a3 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(111, 66, 193, 0.3);
+            min-width: 40px;
+        }
+        
+        .choice-audio-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 3px 12px rgba(111, 66, 193, 0.4);
+        }
+        
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            font-size: 2.4em;
+            margin-bottom: 15px;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            background: linear-gradient(135deg, #2c3e50 0%, #e91e63 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #34495e;
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            font-style: italic;
+            font-weight: 300;
+        }
+        
+        .story-text {
+            font-size: 1.1em;
+            line-height: 1.8;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            text-align: justify;
+        }
+        
+        .story-text p {
+            margin-bottom: 15px;
+        }
+        
+        .scene {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .scene:not(.hidden) {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { 
+                opacity: 0; 
+                transform: translateY(30px) scale(0.95);
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0) scale(1);
+            }
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        .choice-explanation {
+            background: linear-gradient(135deg, #e8f5e8 0%, #f0f8ff 100%);
+            border: 2px solid #4CAF50;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .choice-explanation h3 {
+            color: #2e7d32;
+            margin: 0 0 20px 0;
+            font-size: 18px;
+            font-weight: 600;
+            line-height: 1.6;
+            padding-top: 5px;
+        }
+        
+        .choice-display {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 4px solid #4CAF50;
+        }
+        
+        .choice-display .english-text {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1565c0;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .choice-display .japanese-text {
+            font-size: 15px;
+            color: #2e7d32;
+            font-weight: 500;
+        }
+        
+        .explanation-text {
+            font-size: 14px;
+            color: #424242;
+            line-height: 1.6;
+            background: rgba(255, 255, 255, 0.6);
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 3px solid #81c784;
+        }
+        
+        .choice-explanation.wrong {
+            background: linear-gradient(135deg, #fde8e8 0%, #ffebee 100%);
+            border: 2px solid #dc3545;
+        }
+        
+        .choice-explanation.wrong h3 {
+            color: #c62828;
+        }
+        
+        .choice-explanation.wrong .choice-display {
+            border-left: 4px solid #dc3545;
+        }
+        
+        .choice-explanation.wrong .choice-display .japanese-text {
+            color: #c62828;
+        }
+        
+        .choice-explanation.wrong .explanation-text {
+            border-left: 3px solid #ef5350;
+        }
+        
+        .negative-feedback {
+            color: #d32f2f !important;
+            font-weight: 600;
+        }
+        
+        .restart-btn {
+            background: linear-gradient(135deg, #fd79a8 0%, #e84393 100%) !important;
+            box-shadow: 0 4px 15px rgba(253, 121, 168, 0.3) !important;
+        }
+        
+        .restart-btn:hover {
+            box-shadow: 0 6px 20px rgba(253, 121, 168, 0.4) !important;
+        }
+        
+        .home-btn {
+            background: linear-gradient(135deg, #6c5ce7 0%, #5f27cd 100%) !important;
+            box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3) !important;
+        }
+        
+        .home-btn:hover {
+            box-shadow: 0 6px 20px rgba(108, 92, 231, 0.4) !important;
+        }
+        
+        .nav-link {
+            display: inline-block;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(116, 185, 255, 0.3);
+        }
+        
+        .nav-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(116, 185, 255, 0.4);
+            color: white;
+            text-decoration: none;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 10px 0;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #e3f2fd 0%, #f8bbd9 100%);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+            position: relative;
+        }
+        
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .scene-counter {
+            text-align: center;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 0.95em;
+            margin-bottom: 5px;
+        }
+        
+        /* AdSense styling */
+        .adsense-container {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .adsense-label {
+            font-size: 12px;
+            color: #6c757d;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- Navigation -->
+    <div style="text-align: left; margin-bottom: 20px;">
+        <a href="index.html" class="nav-link">← ルール説明に戻る</a>
+    </div>
+    
+    <!-- AdSense 広告 (ヘッダー下) -->
+    <div class="adsense-container">
+        <div class="adsense-label">広告</div>
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-XXXXXXXXXXXXXXXXX"
+             data-ad-slot="XXXXXXXXXX"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+    
+    <!-- Progress Bar -->
+    <div style="text-align: center; margin: 20px 0;">
+        <div class="scene-counter" id="scene-progress" style="margin-bottom: 8px;">Scene 1 of 20</div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress-fill" style="width: 5%;"></div>
+        </div>
+    </div>
+    
+    <div class="story-container">
+        <h1>シンデレラの冒険</h1>
+        <p class="subtitle">～詳細版：魔法と愛の物語～</p>
+        
+        <!-- Scene 1: Family Situation -->
+        <div id="scene1" class="scene">
+            <div class="story-text" data-scene="scene1">
+                <p>Long ago, in a beautiful kingdom, there lived a kind and gentle girl named Cinderella.</p>
+                <p>Her loving mother had passed away when she was young, and her father remarried a woman who already had two daughters.</p>
+                <p>Though her father tried his best to show love to all his children, Cinderella's new stepmother favored her own daughters and often ignored Cinderella.</p>
+            </div>
+            <div class="audio-controls">
+                <button class="audio-btn" onclick="playSceneAudio('scene1')">🔊 英語音声を再生</button>
+                <button class="audio-btn" onclick="stopAudio()">⏹️ 停止</button>
+            </div>
+            <div class="choices">
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="selectChoiceAndGoToScene('scene2', 'Try to understand her stepmother and build a good relationship')">Try to understand her stepmother and build a good relationship</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Try to understand her stepmother and build a good relationship')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene1', 'Complain to her father about the unfair treatment')">Complain to her father about the unfair treatment</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Complain to her father about the unfair treatment')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene1', 'Ignore the stepmother and avoid family interactions')">Ignore the stepmother and avoid family interactions</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Ignore the stepmother and avoid family interactions')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scene 2: Father's Death -->
+        <div id="scene2" class="scene hidden">
+            <!-- Choice explanation area (hidden by default) -->
+            <div id="scene2-explanation" class="choice-explanation hidden">
+                <h3>前の問題</h3>
+                <div class="previous-question">
+                    <div class="english-text" id="scene2-previous-question"></div>
+                    <div class="japanese-text" id="scene2-previous-question-translation"></div>
+                </div>
+                
+                <h3>あなたが選んだ選択肢</h3>
+                <div class="choice-display">
+                    <div class="english-text">
+                        <span id="scene2-choice-text"></span>
+                        <button class="choice-audio-btn" onclick="playSelectedChoiceAudio('scene2')" title="選択した答えの音声を再生">🔊</button>
+                    </div>
+                    <div class="japanese-text" id="scene2-choice-translation"></div>
+                </div>
+                <div class="explanation-text" id="scene2-choice-explanation"></div>
+            </div>
+            <div class="section-divider hidden" id="scene2-divider"></div>
+            
+            <div class="story-text" data-scene="scene2">
+                <p>Sadly, when Cinderella was still a teenager, her beloved father became very ill and passed away.</p>
+                <p>With no one left to protect her, the stepmother's true nature emerged.</p>
+                <p>She began treating Cinderella like a servant, making her do all the household chores while her stepsisters lived in luxury.</p>
+            </div>
+            <div class="audio-controls">
+                <button class="audio-btn" onclick="playSceneAudio('scene2')">🔊 英語音声を再生</button>
+                <button class="audio-btn" onclick="stopAudio()">⏹️ 停止</button>
+            </div>
+            <div class="choices">
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="selectChoiceAndGoToScene('scene3', 'Accept her new role but maintain her dignity and kindness')">Accept her new role but maintain her dignity and kindness</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Accept her new role but maintain her dignity and kindness')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene2', 'Run away from home to escape this treatment')">Run away from home to escape this treatment</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Run away from home to escape this treatment')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene2', 'Refuse to do the chores and demand equal treatment')">Refuse to do the chores and demand equal treatment</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Refuse to do the chores and demand equal treatment')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scene 3: Years of Service -->
+        <div id="scene3" class="scene hidden">
+            <!-- Choice explanation area (hidden by default) -->
+            <div id="scene3-explanation" class="choice-explanation hidden">
+                <h3>前の問題</h3>
+                <div class="previous-question">
+                    <div class="english-text" id="scene3-previous-question"></div>
+                    <div class="japanese-text" id="scene3-previous-question-translation"></div>
+                </div>
+                
+                <h3>あなたが選んだ選択肢</h3>
+                <div class="choice-display">
+                    <div class="english-text">
+                        <span id="scene3-choice-text"></span>
+                        <button class="choice-audio-btn" onclick="playSelectedChoiceAudio('scene3')" title="選択した答えの音声を再生">🔊</button>
+                    </div>
+                    <div class="japanese-text" id="scene3-choice-translation"></div>
+                </div>
+                <div class="explanation-text" id="scene3-choice-explanation"></div>
+            </div>
+            <div class="section-divider hidden" id="scene3-divider"></div>
+            
+            <div class="story-text" data-scene="scene3">
+                <p>Years passed, and Cinderella continued to work hard with patience and grace.</p>
+                <p>Despite the harsh treatment, her kind heart never changed, and she found joy in small things like helping the birds and animals around the house.</p>
+                <p>One day, a messenger arrived at their door with a grand announcement from the royal palace.</p>
+            </div>
+            <div class="audio-controls">
+                <button class="audio-btn" onclick="playSceneAudio('scene3')">🔊 英語音声を再生</button>
+                <button class="audio-btn" onclick="stopAudio()">⏹️ 停止</button>
+            </div>
+            <div class="choices">
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="selectChoiceAndGoToScene('ending', 'Listen eagerly to hear what the announcement is about')">Listen eagerly to hear what the announcement is about</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Listen eagerly to hear what the announcement is about')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene3', 'Continue working and ignore the messenger')">Continue working and ignore the messenger</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Continue working and ignore the messenger')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene3', 'Hide so the messenger does not see her')">Hide so the messenger does not see her</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Hide so the messenger does not see her')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ending Scene -->
+        <div id="ending" class="scene hidden">
+            <div class="story-text" data-scene="ending">
+                <p>And so, Cinderella and the Prince were married in a beautiful ceremony attended by people from all over the kingdom.</p>
+                <p>Her stepmother and stepsisters, realizing their mistakes, asked for forgiveness, which Cinderella graciously granted.</p>
+                <p>As Queen, she ruled with kindness and wisdom, always remembering the lessons she learned about patience, kindness, and the power of staying true to oneself.</p>
+            </div>
+            <div class="audio-controls">
+                <button class="audio-btn" onclick="playSceneAudio('ending')">🔊 英語音声を再生</button>
+                <button class="audio-btn" onclick="stopAudio()">⏹️ 停止</button>
+            </div>
+            <div class="choice-explanation">
+                <h3>🎉 Congratulations! Perfect Ending!</h3>
+                <div class="explanation-text">
+                    You've completed Cinderella's extended adventure! Through your choices, Cinderella showed kindness, patience, and strength even in difficult times. Her goodness was rewarded with true love and a happy ending. The story teaches us that staying true to our values, even when facing hardship, ultimately leads to the greatest rewards.
+                    <br><br>
+                    おめでとうございます！シンデレラの拡張アドベンチャーを完了しました！あなたの選択を通じて、シンデレラは困難な時でも優しさ、忍耐、強さを示しました。彼女の善良さは真実の愛と幸せな結末で報われました。この物語は、困難に直面しても自分の価値観に忠実でいることが、最終的には最大の報酬をもたらすことを教えています。
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 30px;">
+                <div class="choice-container" style="justify-content: center; gap: 20px;">
+                    <button class="choice-button-main restart-btn" onclick="restartGame()">🔄 Play Again</button>
+                    <button class="choice-button-main home-btn" onclick="location.href='index.html'">🏠 Home</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Wrong Choice Scene -->
+        <div id="wrong-message" class="scene hidden">
+            <!-- Choice explanation area for wrong choices -->
+            <div id="wrong-message-explanation" class="choice-explanation wrong hidden">
+                <h3>あなたが選んだ選択肢</h3>
+                <div class="choice-display">
+                    <div class="english-text">
+                        <span id="wrong-message-choice-text"></span>
+                    </div>
+                    <div class="japanese-text" id="wrong-message-choice-translation"></div>
+                </div>
+                <div class="explanation-text" id="wrong-message-choice-explanation"></div>
+            </div>
+            <div class="section-divider hidden" id="wrong-message-divider" style="height: 20px; border-bottom: 1px solid rgba(220, 53, 69, 0.2); margin: 20px 0;"></div>
+            
+            <div class="story-text" data-scene="wrong-message">
+                <p>🚫 <span class="negative-feedback">Oops!</span> That choice doesn't match the real Cinderella story.</p>
+                <p>In the traditional story, Cinderella is kind, patient, and forgiving.</p>
+                <p>Try again and choose the answer that shows kindness and wisdom!</p>
+            </div>
+            <div class="choices">
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="goBack()">Try Again</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main restart-btn" onclick="restartGame()">Start Over</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main home-btn" onclick="location.href='index.html'">← Home</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AdSense containers - Below content -->
+    <div class="adsense-container">
+        <div class="adsense-label">Advertisement</div>
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-XXXXXXXXXXXXXXXXX"
+             data-ad-slot="XXXXXXXXX"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+    </div>
+
+    <script>
+        // Game state variables
+        let currentScene = 'scene1';
+        let previousScene = 'scene1';
+        let currentSceneNumber = 1;
+        const totalScenes = 20;
+        
+        // Audio variables
+        let currentSpeech = null;
+        let selectedChoiceInfo = { text: '', translation: '', explanation: '' };
+        let previousQuestionInfo = { text: '', translation: '' };
+
+        // Translation dictionary for questions
+        const questionTranslations = {
+            "Though her father tried his best to show love to all his children, Cinderella's new stepmother favored her own daughters and often ignored Cinderella.": "父はすべての子供たちに愛情を示そうと努めましたが、新しい継母は自分の娘たちを贔屓し、しばしばシンデレラを無視していました。",
+            "She began treating Cinderella like a servant, making her do all the household chores while her stepsisters lived in luxury.": "継母はシンデレラを召使いのように扱い始め、義理の姉たちが贅沢に暮らす中、彼女にすべての家事をさせるようになりました。",
+            "One day, a messenger arrived at their door with a grand announcement from the royal palace.": "ある日、王宮からの重大な発表を携えた使者が彼らの扉にやってきました。"
+        };
+
+        // Scene audio content
+        const sceneAudioContent = {
+            'scene1': "Long ago, in a beautiful kingdom, there lived a kind and gentle girl named Cinderella. Her loving mother had passed away when she was young, and her father remarried a woman who already had two daughters. Though her father tried his best to show love to all his children, Cinderella's new stepmother favored her own daughters and often ignored Cinderella.",
+            'scene2': "Sadly, when Cinderella was still a teenager, her beloved father became very ill and passed away. With no one left to protect her, the stepmother's true nature emerged. She began treating Cinderella like a servant, making her do all the household chores while her stepsisters lived in luxury.",
+            'scene3': "Years passed, and Cinderella continued to work hard with patience and grace. Despite the harsh treatment, her kind heart never changed, and she found joy in small things like helping the birds and animals around the house. One day, a messenger arrived at their door with a grand announcement from the royal palace.",
+            'ending': "And so, Cinderella and the Prince were married in a beautiful ceremony attended by people from all over the kingdom. Her stepmother and stepsisters, realizing their mistakes, asked for forgiveness, which Cinderella graciously granted. As Queen, she ruled with kindness and wisdom, always remembering the lessons she learned about patience, kindness, and the power of staying true to oneself."
+        };
+
+        // Choice translations and explanations
+        const choiceTranslations = {
+            // Scene 1
+            "Try to understand her stepmother and build a good relationship": {
+                translation: "継母を理解し、良い関係を築くよう努める",
+                explanation: "正解！困難な家族状況でも、相手を理解し良い関係を築こうとする姿勢は、シンデレラの優しさと賢さを示しています。"
+            },
+            "Complain to her father about the unfair treatment": {
+                translation: "不公平な扱いについて父に苦情を言う",
+                explanation: "愚痴や苦情を言うのは簡単ですが、家族の調和を乱す可能性があります。シンデレラは忍耐強く建設的な解決策を選びます。"
+            },
+            "Ignore the stepmother and avoid family interactions": {
+                translation: "継母を無視して家族との関わりを避ける",
+                explanation: "問題を避けても解決にはなりません。シンデレラは困難な状況でも優しさを失わず、積極的に関係改善を図ります。"
+            },
+            // Scene 2
+            "Accept her new role but maintain her dignity and kindness": {
+                translation: "新しい役割を受け入れつつも、尊厳と優しさを保つ",
+                explanation: "正解！つらい状況でも品位と優しさを保つシンデレラの強さが、後に幸福へと導かれる理由です。"
+            },
+            "Run away from home to escape this treatment": {
+                translation: "この扱いから逃れるために家出する",
+                explanation: "逃げ出すのは危険です。シンデレラは困難な状況でも家族への愛と責任感を持ち続けます。"
+            },
+            "Refuse to do the chores and demand equal treatment": {
+                translation: "家事を拒否して平等な扱いを要求する",
+                explanation: "反抗は状況を悪化させるかもしれません。シンデレラは忍耐と優しさで周りの人の心を動かします。"
+            },
+            // Scene 3
+            "Listen eagerly to hear what the announcement is about": {
+                translation: "発表の内容を熱心に聞く",
+                explanation: "正解！シンデレラは常に前向きで希望を失わない人です。新しい情報に対して興味を示すのは自然で健全な反応です。"
+            },
+            "Continue working and ignore the messenger": {
+                translation: "仕事を続けて使者を無視する",
+                explanation: "機会を逃すのはもったいないです。シンデレラは勤勉ですが、重要な情報にも注意を払います。"
+            },
+            "Hide so the messenger does not see her": {
+                translation: "使者に見られないように隠れる",
+                explanation: "隠れる必要はありません。シンデレラは恥じることのない正直で善良な人です。"
+            }
+        };
+
+        // Progress tracking
+        function updateProgress() {
+            const progressPercentage = (currentSceneNumber / totalScenes) * 100;
+            document.getElementById('progress-fill').style.width = progressPercentage + '%';
+            document.getElementById('scene-progress').textContent = `Scene ${currentSceneNumber} of ${totalScenes}`;
+        }
+
+        // Audio functions
+        function playSceneAudio(sceneId) {
+            stopAudio();
+            
+            if (sceneAudioContent[sceneId]) {
+                const utterance = new SpeechSynthesisUtterance(sceneAudioContent[sceneId]);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.8;
+                utterance.pitch = 1;
+                utterance.volume = 0.8;
+                
+                currentSpeech = utterance;
+                speechSynthesis.speak(utterance);
+            }
+        }
+
+        function playChoiceAudio(choiceText) {
+            stopAudio();
+            
+            if (choiceText) {
+                const utterance = new SpeechSynthesisUtterance(choiceText);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.7;
+                utterance.pitch = 1;
+                utterance.volume = 0.8;
+                
+                currentSpeech = utterance;
+                speechSynthesis.speak(utterance);
+            }
+        }
+
+        function stopAudio() {
+            speechSynthesis.cancel();
+            currentSpeech = null;
+        }
+
+        function playSelectedChoiceAudio(sceneId) {
+            if (selectedChoiceInfo && selectedChoiceInfo.text) {
+                playChoiceAudio(selectedChoiceInfo.text);
+            }
+        }
+
+        // Choice selection and navigation
+        function selectChoiceAndGoToScene(nextSceneId, selectedChoice) {
+            // Extract previous question from current scene
+            const currentSceneElement = document.getElementById(currentScene);
+            if (currentSceneElement) {
+                const storyTextElement = currentSceneElement.querySelector('.story-text');
+                if (storyTextElement) {
+                    const paragraphs = storyTextElement.querySelectorAll('p');
+                    if (paragraphs.length > 0) {
+                        const lastParagraph = paragraphs[paragraphs.length - 1];
+                        const questionText = lastParagraph.textContent.trim();
+                        
+                        // Store previous question info
+                        previousQuestionInfo = {
+                            text: questionText,
+                            translation: questionTranslations[questionText] || 'この問題の翻訳が見つかりません'
+                        };
+                    }
+                }
+            }
+            
+            // Look up translation and explanation from the dictionary
+            const choiceData = choiceTranslations[selectedChoice];
+            
+            if (choiceData) {
+                // Store the selected choice information
+                selectedChoiceInfo = {
+                    text: selectedChoice,
+                    translation: choiceData.translation,
+                    explanation: choiceData.explanation
+                };
+            } else {
+                // Fallback if translation not found
+                selectedChoiceInfo = {
+                    text: selectedChoice,
+                    translation: '翻訳が見つかりません',
+                    explanation: 'この選択肢の説明が見つかりません。'
+                };
+            }
+            
+            // Correct choice selected, go to next scene
+            goToScene(nextSceneId);
+            
+            // Display the explanation if elements exist
+            displayCorrectChoiceExplanation(nextSceneId);
+        }
+
+        function showWrongChoice(fromScene, selectedChoice = '') {
+            previousScene = fromScene;
+            
+            // Look up translation and explanation from the dictionary
+            const choiceData = choiceTranslations[selectedChoice];
+            
+            if (choiceData) {
+                // Store the selected choice information
+                selectedChoiceInfo = {
+                    text: selectedChoice,
+                    translation: choiceData.translation,
+                    explanation: choiceData.explanation
+                };
+            } else {
+                // Fallback if translation not found
+                selectedChoiceInfo = {
+                    text: selectedChoice,
+                    translation: '翻訳が見つかりません',
+                    explanation: 'この選択肢の説明が見つかりません。'
+                };
+            }
+            
+            goToScene('wrong-message');
+            
+            // Display the explanation
+            displayChoiceExplanation('wrong-message');
+        }
+
+        // Function to display choice explanation in wrong message scene
+        function displayChoiceExplanation(sceneId) {
+            if (selectedChoiceInfo && selectedChoiceInfo.text) {
+                // Update choice explanation elements
+                const choiceTextElement = document.getElementById('wrong-message-choice-text');
+                const translationElement = document.getElementById('wrong-message-choice-translation');
+                const explanationElement = document.getElementById('wrong-message-choice-explanation');
+                const explanationContainer = document.getElementById('wrong-message-explanation');
+                const divider = document.getElementById('wrong-message-divider');
+                
+                if (choiceTextElement) choiceTextElement.textContent = selectedChoiceInfo.text;
+                if (translationElement) translationElement.textContent = selectedChoiceInfo.translation;
+                if (explanationElement) explanationElement.textContent = selectedChoiceInfo.explanation;
+                
+                // Show the explanation
+                if (explanationContainer) explanationContainer.classList.remove('hidden');
+                if (divider) divider.classList.remove('hidden');
+            }
+        }
+
+        // Function to display correct choice explanation in scenes
+        function displayCorrectChoiceExplanation(sceneId) {
+            // This function will look for explanation elements in any scene
+            // If they don't exist, it will skip silently
+            const explanationDiv = document.getElementById(sceneId + '-explanation');
+            const dividerDiv = document.getElementById(sceneId + '-divider');
+            const choiceTextSpan = document.getElementById(sceneId + '-choice-text');
+            const translationDiv = document.getElementById(sceneId + '-choice-translation');
+            const explanationTextDiv = document.getElementById(sceneId + '-choice-explanation');
+            
+            // Previous question elements
+            const previousQuestionDiv = document.getElementById(sceneId + '-previous-question');
+            const previousQuestionTranslationDiv = document.getElementById(sceneId + '-previous-question-translation');
+            
+            // Only proceed if the basic elements exist
+            if (explanationDiv && choiceTextSpan && translationDiv && explanationTextDiv) {
+                // Populate the choice content safely using textContent
+                choiceTextSpan.textContent = selectedChoiceInfo.text;
+                translationDiv.textContent = selectedChoiceInfo.translation;
+                explanationTextDiv.textContent = selectedChoiceInfo.explanation;
+                
+                // Populate previous question if elements exist
+                if (previousQuestionDiv && previousQuestionTranslationDiv && previousQuestionInfo.text) {
+                    previousQuestionDiv.textContent = previousQuestionInfo.text;
+                    previousQuestionTranslationDiv.textContent = previousQuestionInfo.translation;
+                }
+                
+                // Show the explanation elements
+                explanationDiv.classList.remove('hidden');
+                if (dividerDiv) {
+                    dividerDiv.classList.remove('hidden');
+                }
+            }
+        }
+
+        function goToScene(sceneId) {
+            // Hide all scenes first
+            const allScenes = document.querySelectorAll('.scene');
+            allScenes.forEach(scene => scene.classList.add('hidden'));
+            
+            // Handle wrong-message scene
+            if (sceneId === 'wrong-message') {
+                const wrongScene = document.getElementById('wrong-message');
+                if (wrongScene) {
+                    wrongScene.classList.remove('hidden');
+                    wrongScene.classList.add('fade-in');
+                }
+                window.scrollTo(0, 0);
+                return;
+            }
+            
+            // Show new scene
+            previousScene = currentScene;
+            currentScene = sceneId;
+            
+            // Handle ending scene separately
+            if (sceneId === 'ending') {
+                currentSceneNumber = totalScenes;
+            } else {
+                currentSceneNumber = parseInt(sceneId.replace('scene', ''));
+            }
+            
+            const newScene = document.getElementById(sceneId);
+            if (newScene) {
+                newScene.classList.remove('hidden');
+                newScene.classList.add('fade-in');
+                updateProgress();
+                window.scrollTo(0, 0);
+            }
+        }
+
+        function goBack() {
+            currentSceneNumber = parseInt(previousScene.replace('scene', ''));
+            goToScene(previousScene);
+        }
+
+        function restartGame() {
+            // Hide all scenes
+            const scenes = document.querySelectorAll('.scene');
+            scenes.forEach(scene => {
+                scene.classList.add('hidden');
+            });
+            
+            // Reset game state
+            currentScene = 'scene1';
+            previousScene = 'scene1';
+            currentSceneNumber = 1;
+            selectedChoiceInfo = { text: '', translation: '', explanation: '' };
+            
+            // Show first scene
+            document.getElementById('scene1').classList.remove('hidden');
+            updateProgress();
+        }
+
+        // Initialize the game
+        document.addEventListener('DOMContentLoaded', function() {
+            updateProgress();
+            
+            // Initialize AdSense
+            try {
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            } catch (e) {}
+        });
+    </script>
+</body>
+</html>

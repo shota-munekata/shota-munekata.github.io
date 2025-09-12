@@ -1,0 +1,1698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snow White Extended Adventure - English Gamebook</title>
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXXX" 
+            crossorigin="anonymous"></script>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'ヒラギノ角ゴシック', 'Yu Gothic Medium', '游ゴシック Medium', YuGothic, '游ゴシック体', 'Meiryo', Arial, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            min-height: 100vh;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(255, 154, 158, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(254, 207, 239, 0.2) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .story-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.1),
+                0 2px 8px rgba(255, 255, 255, 0.2) inset;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .story-container::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #ff9a9e, #fecfef, #ff9a9e, #fecfef, #ff9a9e);
+            border-radius: 22px;
+            z-index: -1;
+            opacity: 0.1;
+        }
+        
+        .choices {
+            margin-top: 20px;
+        }
+        
+        /* Audio controls styling */
+        .audio-controls {
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            background-color: rgba(248, 249, 250, 0.8);
+            border-radius: 12px;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            backdrop-filter: blur(10px);
+        }
+        
+        .audio-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 0 6px;
+            background: linear-gradient(135deg, #17a2b8 0%, #117a8b 100%);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 3px 12px rgba(23, 162, 184, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .audio-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 16px rgba(23, 162, 184, 0.4);
+        }
+        
+        .audio-btn:active {
+            transform: translateY(0);
+        }
+        
+        .audio-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s;
+        }
+        
+        .audio-btn:hover::before {
+            left: 100%;
+        }
+        
+        .choice-container {
+            display: flex;
+            align-items: center;
+            margin: 8px 0;
+            gap: 8px;
+        }
+        
+        .choice-button-main {
+            flex: 1;
+            padding: 12px 16px;
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 3px 12px rgba(40, 167, 69, 0.3);
+            text-align: left;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .choice-button-main:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(40, 167, 69, 0.4);
+        }
+        
+        .choice-audio-btn {
+            padding: 8px 12px;
+            background: linear-gradient(135deg, #6f42c1 0%, #5a32a3 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(111, 66, 193, 0.3);
+            min-width: 40px;
+        }
+        
+        .choice-audio-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 3px 12px rgba(111, 66, 193, 0.4);
+        }
+        
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            font-size: 2.4em;
+            margin-bottom: 15px;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            background: linear-gradient(135deg, #2c3e50 0%, #ff9a9e 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #34495e;
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            font-style: italic;
+            font-weight: 300;
+        }
+        
+        .story-text {
+            font-size: 1.1em;
+            line-height: 1.8;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            text-align: justify;
+        }
+        
+        .story-text p {
+            margin-bottom: 15px;
+        }
+        
+        .scene {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .scene:not(.hidden) {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { 
+                opacity: 0; 
+                transform: translateY(30px) scale(0.95);
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0) scale(1);
+            }
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        .choice-explanation {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+            border: 2px solid #ffd93d;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(255, 217, 61, 0.3);
+        }
+        
+        .choice-explanation::before {
+            content: "💡";
+            position: absolute;
+            top: -12px;
+            left: 20px;
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+            padding: 0 12px;
+            font-size: 1.3em;
+            border-radius: 50%;
+        }
+        
+        .choice-explanation h4 {
+            color: #856404;
+            margin-bottom: 12px;
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+        
+        .choice-explanation p {
+            color: #856404;
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+        
+        .restart-btn {
+            background: linear-gradient(135deg, #fd79a8 0%, #e84393 100%) !important;
+            box-shadow: 0 4px 15px rgba(253, 121, 168, 0.3) !important;
+        }
+        
+        .restart-btn:hover {
+            box-shadow: 0 6px 20px rgba(253, 121, 168, 0.4) !important;
+        }
+        
+        .home-btn {
+            background: linear-gradient(135deg, #6c5ce7 0%, #5f27cd 100%) !important;
+            box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3) !important;
+        }
+        
+        .home-btn:hover {
+            box-shadow: 0 6px 20px rgba(108, 92, 231, 0.4) !important;
+        }
+        
+        .nav-link {
+            display: inline-block;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(116, 185, 255, 0.3);
+        }
+        
+        .nav-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(116, 185, 255, 0.4);
+            color: white;
+            text-decoration: none;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 10px 0;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff9a9e 0%, #fecfef 100%);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+            position: relative;
+        }
+        
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .scene-counter {
+            text-align: center;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 0.95em;
+            margin-bottom: 5px;
+        }
+        
+        /* Choice explanation styling from momotaro */
+        .choice-explanation {
+            background: linear-gradient(135deg, #e8f5e8 0%, #f0f8ff 100%);
+            border: 2px solid #4CAF50;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .choice-explanation::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: 15px;
+            background: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            font-size: 18px;
+            display: none;
+        }
+        
+        .choice-explanation h3 {
+            color: #2e7d32;
+            margin: 0 0 20px 0;
+            font-size: 18px;
+            font-weight: 600;
+            line-height: 1.6;
+            padding-top: 5px;
+        }
+        
+        .choice-explanation h3::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            font-size: 20px;
+            display: none;
+        }
+        
+        .choice-display {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 4px solid #4CAF50;
+        }
+        
+        .choice-display .english-text {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1565c0;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .choice-display .japanese-text {
+            font-size: 15px;
+            color: #2e7d32;
+            font-weight: 500;
+        }
+        
+        .explanation-text {
+            font-size: 14px;
+            color: #424242;
+            line-height: 1.6;
+            background: rgba(255, 255, 255, 0.6);
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 3px solid #81c784;
+        }
+        
+        .choice-explanation.wrong {
+            background: linear-gradient(135deg, #fde8e8 0%, #ffebee 100%);
+            border: 2px solid #dc3545;
+        }
+        
+        .choice-explanation.wrong::before {
+            content: '';
+            display: none;
+        }
+        
+        .choice-explanation.wrong h3 {
+            color: #c62828;
+        }
+        
+        .choice-explanation.wrong h3::before {
+            content: '';
+            display: none;
+        }
+        
+        .choice-explanation.wrong .choice-display {
+            border-left: 4px solid #dc3545;
+        }
+        
+        .choice-explanation.wrong .choice-display .japanese-text {
+            color: #c62828;
+        }
+        
+        .choice-explanation.wrong .explanation-text {
+            border-left: 3px solid #ef5350;
+        }
+        
+        .negative-feedback {
+            color: #d32f2f !important;
+            font-weight: 600;
+        }
+        
+        .previous-question {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #4CAF50;
+            margin-bottom: 20px;
+        }
+        
+        .previous-question .english-text {
+            font-size: 16px;
+            color: #2e7d32;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .previous-question .japanese-text {
+            font-size: 14px;
+            color: #666;
+            font-style: italic;
+        }
+        
+        .section-divider {
+            height: 20px;
+            border-bottom: 1px solid rgba(255, 154, 158, 0.2);
+            margin: 20px 0;
+        }
+        
+        /* AdSense styling */
+        .adsense-container {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .adsense-label {
+            font-size: 12px;
+            color: #6c757d;
+            margin-bottom: 10px;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+            
+            .story-container {
+                padding: 25px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .story-text {
+                font-size: 1em;
+            }
+            
+            .choice-button-main {
+                padding: 10px 14px;
+                font-size: 0.9em;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .story-container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 1.8em;
+            }
+            
+            .choice-container {
+                flex-direction: column;
+                gap: 4px;
+            }
+            
+            .choice-audio-btn {
+                align-self: flex-end;
+                margin-top: -4px;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- Navigation -->
+    <div style="text-align: left; margin-bottom: 20px;">
+        <a href="index.html" class="nav-link">← ルール説明に戻る</a>
+    </div>
+    
+    <!-- AdSense 広告 (ヘッダー下) -->
+    <div class="adsense-container">
+        <div class="adsense-label">広告</div>
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-XXXXXXXXXXXXXXXXX"
+             data-ad-slot="XXXXXXXXXX"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+    
+    <!-- Progress Bar -->
+    <div style="text-align: center; margin: 20px 0;">
+        <div class="scene-counter" id="scene-progress" style="margin-bottom: 8px;">Scene 1 of 20</div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress-fill" style="width: 5%;"></div>
+        </div>
+    </div>
+    
+    <div class="story-container">
+        <h1>白雪姫の冒険</h1>
+        <p class="subtitle">～詳細版：魔法の鏡と7人の小人たち～</p>
+        
+        <!-- Scene 1: The Queen's Vanity -->
+        <div id="scene1" class="scene">
+            <div class="story-text" data-scene="scene1">
+                <p>Long ago, in a magnificent castle, lived a beautiful but vain queen.</p>
+                <p>She owned a magical mirror that could answer any question with the truth.</p>
+                <p>Every morning, the queen would stand before the mirror and ask her favorite question.</p>
+            </div>
+            <div class="audio-controls">
+                <button class="audio-btn" onclick="playSceneAudio('scene1')">🔊 英語音声を再生</button>
+                <button class="audio-btn" onclick="stopAudio()">⏹️ 停止</button>
+            </div>
+            <div class="choices">
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="selectChoiceAndGoToScene('scene2', 'Ask the mirror who is the fairest')">Ask the mirror who is the fairest</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Ask the mirror who is the fairest')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene1', 'Ask about the weather')">Ask about the weather</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Ask about the weather')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene1', 'Ignore the mirror completely')">Ignore the mirror completely</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Ignore the mirror completely')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scene 2: The Mirror's Troubling Answer -->
+        <div id="scene2" class="scene hidden">
+            <div class="story-text" data-scene="scene2">
+                <p>"Mirror, mirror on the wall, who is the fairest of them all?" asked the queen.</p>
+                <p>For years, the mirror had always answered: "You are the fairest, my queen."</p>
+                <p>But this day, the mirror gave a different answer: "You are fair, but Snow White is the fairest of all!"</p>
+            </div>
+            <div class="audio-controls">
+                <button class="audio-btn" onclick="playSceneAudio('scene2')">🔊 英語音声を再生</button>
+                <button class="audio-btn" onclick="stopAudio()">⏹️ 停止</button>
+            </div>
+            <div class="choices">
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="selectChoiceAndGoToScene('scene3', 'Become jealous and angry')">Become jealous and angry</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Become jealous and angry')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene2', 'Be happy for Snow White')">Be happy for Snow White</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Be happy for Snow White')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene2', 'Break the mirror in confusion')">Break the mirror in confusion</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Break the mirror in confusion')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scene 3: Snow White's Daily Life -->
+        <div id="scene3" class="scene hidden">
+            <div class="story-text" data-scene="scene3">
+                <p>Meanwhile, Snow White was in the castle garden, singing sweetly to the birds.</p>
+                <p>She was kind to all the animals and servants. Everyone in the castle loved her.</p>
+                <p>Snow White had no idea that her beauty was causing such jealousy in her stepmother's heart.</p>
+            </div>
+            <div class="audio-controls">
+                <button class="audio-btn" onclick="playSceneAudio('scene3')">🔊 英語音声を再生</button>
+                <button class="audio-btn" onclick="stopAudio()">⏹️ 停止</button>
+            </div>
+            <div class="choices">
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="selectChoiceAndGoToScene('scene4', 'Continue her innocent daily activities')">Continue her innocent daily activities</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Continue her innocent daily activities')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene3', 'Boast about her beauty')">Boast about her beauty</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Boast about her beauty')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene3', 'Compete with the queen')">Compete with the queen</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Compete with the queen')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scene 4: The Evil Plan -->
+        <div id="scene4" class="scene hidden">
+            <div class="story-text" data-scene="scene4">
+                <p>The evil queen could not bear to be second in beauty. Her jealousy grew stronger each day.</p>
+                <p>She called for her most trusted huntsman and gave him a terrible order.</p>
+                <p>"Take Snow White deep into the forest and make sure she never returns to the castle."</p>
+            </div>
+            <div class="audio-controls">
+                <button class="audio-btn" onclick="playSceneAudio('scene4')">🔊 英語音声を再生</button>
+                <button class="audio-btn" onclick="stopAudio()">⏹️ 停止</button>
+            </div>
+            <div class="choices">
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="selectChoiceAndGoToScene('scene5', 'The huntsman feels troubled by this order')">The huntsman feels troubled by this order</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('The huntsman feels troubled by this order')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene4', 'The huntsman agrees immediately')">The huntsman agrees immediately</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('The huntsman agrees immediately')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene4', 'The huntsman refuses outright')">The huntsman refuses outright</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('The huntsman refuses outright')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scene 5: The Huntsman's Dilemma -->
+        <div id="scene5" class="scene hidden">
+            <div class="story-text" data-scene="scene5">
+                <p>The huntsman had watched Snow White grow up. She was like a daughter to him.</p>
+                <p>But he also feared the queen's anger if he disobeyed her orders.</p>
+                <p>With a heavy heart, he approached Snow White and asked her to come with him into the forest.</p>
+            </div>
+            <div class="audio-controls">
+                <button class="audio-btn" onclick="playSceneAudio('scene5')">🔊 英語音声を再生</button>
+                <button class="audio-btn" onclick="stopAudio()">⏹️ 停止</button>
+            </div>
+            <div class="choices">
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="selectChoiceAndGoToScene('scene6', 'Snow White trustingly follows him')">Snow White trustingly follows him</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Snow White trustingly follows him')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene5', 'Snow White becomes suspicious')">Snow White becomes suspicious</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Snow White becomes suspicious')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene5', 'Snow White refuses to go')">Snow White refuses to go</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Snow White refuses to go')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scene 6: In the Deep Forest -->
+        <div id="scene6" class="scene hidden">
+            <div class="story-text" data-scene="scene6">
+                <p>Deep in the dark forest, the huntsman could no longer hide his sorrow.</p>
+                <p>He fell to his knees and told Snow White the truth about the queen's evil plan.</p>
+                <p>"You must run away and never return to the castle," he said with tears in his eyes.</p>
+            </div>
+            <div class="audio-controls">
+                <button class="audio-btn" onclick="playSceneAudio('scene6')">🔊 英語音声を再生</button>
+                <button class="audio-btn" onclick="stopAudio()">⏹️ 停止</button>
+            </div>
+            <div class="choices">
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="selectChoiceAndGoToScene('scene7', 'Thank the huntsman and run deeper into the forest')">Thank the huntsman and run deeper into the forest</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Thank the huntsman and run deeper into the forest')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene6', 'Try to return to the castle')">Try to return to the castle</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Try to return to the castle')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene6', 'Ask the huntsman to help fight the queen')">Ask the huntsman to help fight the queen</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Ask the huntsman to help fight the queen')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scene 7: Lost and Alone -->
+        <div id="scene7" class="scene hidden">
+            <div class="story-text" data-scene="scene7">
+                <p>Snow White ran through the forest as darkness fell. She was frightened and lost.</p>
+                <p>Strange sounds echoed through the trees, and she stumbled over roots and rocks.</p>
+                <p>Just when she thought she could run no more, she saw a warm light ahead.</p>
+            </div>
+            <div class="audio-controls">
+                <button class="audio-btn" onclick="playSceneAudio('scene7')">🔊 英語音声を再生</button>
+                <button class="audio-btn" onclick="stopAudio()">⏹️ 停止</button>
+            </div>
+            <div class="choices">
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="selectChoiceAndGoToScene('scene8', 'Approach the light cautiously')">Approach the light cautiously</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Approach the light cautiously')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene7', 'Hide and avoid the light')">Hide and avoid the light</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Hide and avoid the light')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene7', 'Call out loudly for help')">Call out loudly for help</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Call out loudly for help')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scene 8: The Little Cottage -->
+        <div id="scene8" class="scene hidden">
+            <div class="story-text" data-scene="scene8">
+                <p>The light came from a tiny cottage with diamond-shaped windows.</p>
+                <p>Everything about the house was small and neat. Even the door was only half her height!</p>
+                <p>Snow White knocked gently on the little door, but no one answered.</p>
+            </div>
+            <div class="audio-controls">
+                <button class="audio-btn" onclick="playSceneAudio('scene8')">🔊 英語音声を再生</button>
+                <button class="audio-btn" onclick="stopAudio()">⏹️ 停止</button>
+            </div>
+            <div class="choices">
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="selectChoiceAndGoToScene('scene9', 'Carefully enter the unlocked cottage')">Carefully enter the unlocked cottage</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Carefully enter the unlocked cottage')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene8', 'Break down the door')">Break down the door</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Break down the door')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene8', 'Sleep outside the cottage')">Sleep outside the cottage</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Sleep outside the cottage')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scene 9: Inside the Cottage -->
+        <div id="scene9" class="scene hidden">
+            <div class="story-text" data-scene="scene9">
+                <p>Inside, Snow White found seven of everything: seven little beds, seven little chairs, seven little plates.</p>
+                <p>The cottage was very messy, with dirty dishes and dust everywhere.</p>
+                <p>Snow White was very tired, but she felt sorry for whoever lived in such a messy place.</p>
+            </div>
+            <div class="audio-controls">
+                <button class="audio-btn" onclick="playSceneAudio('scene9')">🔊 英語音声を再生</button>
+                <button class="audio-btn" onclick="stopAudio()">⏹️ 停止</button>
+            </div>
+            <div class="choices">
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="selectChoiceAndGoToScene('scene10', 'Clean the cottage as a thank you')">Clean the cottage as a thank you</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Clean the cottage as a thank you')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene9', 'Go to sleep immediately')">Go to sleep immediately</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Go to sleep immediately')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene9', 'Eat all the food on the table')">Eat all the food on the table</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Eat all the food on the table')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scene 10: The Seven Dwarfs Return -->
+        <div id="scene10" class="scene hidden">
+            <div class="story-text" data-scene="scene10">
+                <p>After cleaning all day, Snow White fell asleep across the seven little beds.</p>
+                <p>In the evening, the seven dwarfs returned from working in the diamond mines.</p>
+                <p>"Someone has been in our house!" they exclaimed, but they saw how clean everything was.</p>
+            </div>
+            <div class="audio-controls">
+                <button class="audio-btn" onclick="playSceneAudio('scene10')">🔊 英語音声を再生</button>
+                <button class="audio-btn" onclick="stopAudio()">⏹️ 停止</button>
+            </div>
+            <div class="choices">
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="selectChoiceAndGoToScene('scene11', 'The dwarfs gently wake Snow White')">The dwarfs gently wake Snow White</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('The dwarfs gently wake Snow White')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene10', 'The dwarfs get angry about the intrusion')">The dwarfs get angry about the intrusion</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('The dwarfs get angry about the intrusion')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene10', 'The dwarfs call the authorities')">The dwarfs call the authorities</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('The dwarfs call the authorities')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Continue with more scenes... (Scene 11-20) -->
+        <!-- Scene 11: Meeting the Dwarfs -->
+        <div id="scene11" class="scene hidden">
+            <div class="story-text" data-scene="scene11">
+                <p>Snow White woke up to see seven kind faces looking at her with curiosity, not anger.</p>
+                <p>She told them her sad story about the evil queen and the huntsman's warning.</p>
+                <p>The dwarfs listened with sympathy and understanding.</p>
+            </div>
+            <div class="audio-controls">
+                <button class="audio-btn" onclick="playSceneAudio('scene11')">🔊 英語音声を再生</button>
+                <button class="audio-btn" onclick="stopAudio()">⏹️ 停止</button>
+            </div>
+            <div class="choices">
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="selectChoiceAndGoToScene('scene12', 'The dwarfs offer to let her stay')">The dwarfs offer to let her stay</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('The dwarfs offer to let her stay')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene11', 'The dwarfs turn her away')">The dwarfs turn her away</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('The dwarfs turn her away')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene11', 'The dwarfs demand payment')">The dwarfs demand payment</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('The dwarfs demand payment')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scene 12: The Agreement -->
+        <div id="scene12" class="scene hidden">
+            <div class="story-text" data-scene="scene12">
+                <p>"You may stay with us," said Doc, the leader of the dwarfs.</p>
+                <p>"But you must promise to be very careful. Never let strangers into the cottage."</p>
+                <p>"The evil queen has powerful magic and might find you," warned Grumpy.</p>
+            </div>
+            <div class="audio-controls">
+                <button class="audio-btn" onclick="playSceneAudio('scene12')">🔊 英語音声を再生</button>
+                <button class="audio-btn" onclick="stopAudio()">⏹️ 停止</button>
+            </div>
+            <div class="choices">
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="selectChoiceAndGoToScene('scene13', 'Promise to be careful and grateful')">Promise to be careful and grateful</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Promise to be careful and grateful')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene12', 'Dismiss their warnings as silly')">Dismiss their warnings as silly</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Dismiss their warnings as silly')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene12', 'Say she can take care of herself')">Say she can take care of herself</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Say she can take care of herself')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scene 13: Happy Days -->
+        <div id="scene13" class="scene hidden">
+            <div class="story-text" data-scene="scene13">
+                <p>Snow White spent happy days with the seven dwarfs.</p>
+                <p>She cooked delicious meals, mended their clothes, and kept the cottage spotlessly clean.</p>
+                <p>In return, the dwarfs protected her and brought her gifts from the forest.</p>
+            </div>
+            <div class="audio-controls">
+                <button class="audio-btn" onclick="playSceneAudio('scene13')">🔊 英語音声を再生</button>
+                <button class="audio-btn" onclick="stopAudio()">⏹️ 停止</button>
+            </div>
+            <div class="choices">
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="selectChoiceAndGoToScene('scene14', 'Continue this peaceful, happy life')">Continue this peaceful, happy life</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Continue this peaceful, happy life')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene13', 'Become lazy and demanding')">Become lazy and demanding</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Become lazy and demanding')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene13', 'Plan to return to the castle')">Plan to return to the castle</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Plan to return to the castle')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scene 14: The Queen's Discovery -->
+        <div id="scene14" class="scene hidden">
+            <div class="story-text" data-scene="scene14">
+                <p>Meanwhile, the evil queen asked her magic mirror the same question every day.</p>
+                <p>One morning, the mirror revealed the truth: "Snow White still lives, beyond the seven hills, with the seven dwarfs."</p>
+                <p>The queen's rage knew no bounds. She decided to take matters into her own hands.</p>
+            </div>
+            <div class="audio-controls">
+                <button class="audio-btn" onclick="playSceneAudio('scene14')">🔊 英語音声を再生</button>
+                <button class="audio-btn" onclick="stopAudio()">⏹️ 停止</button>
+            </div>
+            <div class="choices">
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="selectChoiceAndGoToScene('scene15', 'The queen disguises herself as an old peddler')">The queen disguises herself as an old peddler</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('The queen disguises herself as an old peddler')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene14', 'The queen gives up her evil plan')">The queen gives up her evil plan</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('The queen gives up her evil plan')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene14', 'The queen sends an army')">The queen sends an army</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('The queen sends an army')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scene 15: The First Temptation -->
+        <div id="scene15" class="scene hidden">
+            <div class="story-text" data-scene="scene15">
+                <p>Disguised as an old woman selling beautiful ribbons, the queen came to the cottage.</p>
+                <p>"Pretty ribbons for a pretty maiden!" she called out in a disguised voice.</p>
+                <p>Snow White remembered the dwarfs' warning, but the ribbons were so beautiful.</p>
+            </div>
+            <div class="audio-controls">
+                <button class="audio-btn" onclick="playSceneAudio('scene15')">🔊 英語音声を再生</button>
+                <button class="audio-btn" onclick="stopAudio()">⏹️ 停止</button>
+            </div>
+            <div class="choices">
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="selectChoiceAndGoToScene('scene16-bad', 'Open the door to see the ribbons')">Open the door to see the ribbons</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Open the door to see the ribbons')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="selectChoiceAndGoToScene('scene16-good', 'Remember the warning and stay inside')">Remember the warning and stay inside</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Remember the warning and stay inside')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene15', 'Call for the dwarfs to come home')">Call for the dwarfs to come home</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Call for the dwarfs to come home')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scene 16-bad: First Trap -->
+        <div id="scene16-bad" class="scene hidden">
+            <div class="story-text" data-scene="scene16-bad">
+                <p>Snow White opened the door, and the queen quickly offered to lace up her bodice with a beautiful ribbon.</p>
+                <p>But the queen pulled the laces so tight that Snow White could barely breathe!</p>
+                <p>She fainted and fell to the floor. The evil queen left, thinking she was dead.</p>
+            </div>
+            <div class="audio-controls">
+                <button class="audio-btn" onclick="playSceneAudio('scene16-bad')">🔊 英語音声を再生</button>
+                <button class="audio-btn" onclick="stopAudio()">⏹️ 停止</button>
+            </div>
+            <div class="choices">
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="selectChoiceAndGoToScene('scene17', 'Wait for the dwarfs to return and save her')">Wait for the dwarfs to return and save her</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Wait for the dwarfs to return and save her')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene16-bad', 'Try to remove the laces herself')">Try to remove the laces herself</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Try to remove the laces herself')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene16-bad', 'Give up hope')">Give up hope</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Give up hope')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scene 16-good: Wise Choice -->
+        <div id="scene16-good" class="scene hidden">
+            <div class="story-text" data-scene="scene16-good">
+                <p>"Thank you, but I cannot open the door," Snow White said politely through the window.</p>
+                <p>"The dwarfs warned me not to let any strangers inside."</p>
+                <p>The disguised queen became angry and left, but Snow White remained safe.</p>
+            </div>
+            <div class="audio-controls">
+                <button class="audio-btn" onclick="playSceneAudio('scene16-good')">🔊 英語音声を再生</button>
+                <button class="audio-btn" onclick="stopAudio()">⏹️ 停止</button>
+            </div>
+            <div class="choices">
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="selectChoiceAndGoToScene('scene18', 'Tell the dwarfs about the visitor')">Tell the dwarfs about the visitor</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Tell the dwarfs about the visitor')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene16-good', 'Keep it a secret')">Keep it a secret</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Keep it a secret')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene16-good', 'Follow the old woman')">Follow the old woman</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Follow the old woman')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scene 17: Rescue by the Dwarfs -->
+        <div id="scene17" class="scene hidden">
+            <div class="story-text" data-scene="scene17">
+                <p>When the seven dwarfs returned home, they found Snow White unconscious on the floor.</p>
+                <p>"The evil queen was here!" cried Doc, immediately cutting the tight laces.</p>
+                <p>Snow White slowly began to breathe normally again.</p>
+            </div>
+            <div class="audio-controls">
+                <button class="audio-btn" onclick="playSceneAudio('scene17')">🔊 英語音声を再生</button>
+                <button class="audio-btn" onclick="stopAudio()">⏹️ 停止</button>
+            </div>
+            <div class="choices">
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="selectChoiceAndGoToScene('scene18', 'Learn from this dangerous experience')">Learn from this dangerous experience</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Learn from this dangerous experience')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene17', 'Blame the dwarfs for not being there')">Blame the dwarfs for not being there</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Blame the dwarfs for not being there')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene17', 'Decide to leave the cottage')">Decide to leave the cottage</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Decide to leave the cottage')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scene 18: The Final Temptation -->
+        <div id="scene18" class="scene hidden">
+            <div class="story-text" data-scene="scene18">
+                <p>The dwarfs warned Snow White even more seriously about strangers.</p>
+                <p>But the next day, the queen returned disguised as a different old woman selling beautiful red apples.</p>
+                <p>"Sweet apples! The most delicious apples in the kingdom!" she called out.</p>
+            </div>
+            <div class="audio-controls">
+                <button class="audio-btn" onclick="playSceneAudio('scene18')">🔊 英語音声を再生</button>
+                <button class="audio-btn" onclick="stopAudio()">⏹️ 停止</button>
+            </div>
+            <div class="choices">
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="selectChoiceAndGoToScene('scene19-good', 'Remember all the warnings and refuse')">Remember all the warnings and refuse</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Remember all the warnings and refuse')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="selectChoiceAndGoToScene('scene19-bad', 'Be tempted by the beautiful apple')">Be tempted by the beautiful apple</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Be tempted by the beautiful apple')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene18', 'Ask the woman to come inside')">Ask the woman to come inside</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Ask the woman to come inside')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scene 19-good: Perfect Wisdom -->
+        <div id="scene19-good" class="scene hidden">
+            <div class="story-text" data-scene="scene19-good">
+                <p>"No, thank you," Snow White said firmly. "I learned my lesson yesterday."</p>
+                <p>"I will not accept anything from strangers, no matter how beautiful it looks."</p>
+                <p>The queen left in fury, and Snow White remained safe once again.</p>
+            </div>
+            <div class="audio-controls">
+                <button class="audio-btn" onclick="playSceneAudio('scene19-good')">🔊 英語音声を再生</button>
+                <button class="audio-btn" onclick="stopAudio()">⏹️ 停止</button>
+            </div>
+            <div class="choices">
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="selectChoiceAndGoToScene('ending-perfect', 'Live happily ever after with wisdom')">Live happily ever after with wisdom</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Live happily ever after with wisdom')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene19-good', 'Become overconfident')">Become overconfident</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Become overconfident')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene19-good', 'Plan revenge against the queen')">Plan revenge against the queen</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Plan revenge against the queen')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scene 19-bad: The Poisoned Apple -->
+        <div id="scene19-bad" class="scene hidden">
+            <div class="story-text" data-scene="scene19-bad">
+                <p>Despite all the warnings, Snow White was tempted by the beautiful red apple.</p>
+                <p>She opened the window, and the queen handed her the apple.</p>
+                <p>As soon as Snow White took one bite, she fell into a deep, magical sleep.</p>
+            </div>
+            <div class="audio-controls">
+                <button class="audio-btn" onclick="playSceneAudio('scene19-bad')">🔊 英語音声を再生</button>
+                <button class="audio-btn" onclick="stopAudio()">⏹️ 停止</button>
+            </div>
+            <div class="choices">
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="selectChoiceAndGoToScene('scene20', 'The dwarfs find her in the magical sleep')">The dwarfs find her in the magical sleep</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('The dwarfs find her in the magical sleep')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene19-bad', 'Snow White wakes up immediately')">Snow White wakes up immediately</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Snow White wakes up immediately')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene19-bad', 'The queen stays to help')">The queen stays to help</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('The queen stays to help')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scene 20: The Glass Coffin and Prince -->
+        <div id="scene20" class="scene hidden">
+            <div class="story-text" data-scene="scene20">
+                <p>The dwarfs tried everything, but could not wake Snow White from the magical sleep.</p>
+                <p>They placed her in a beautiful glass coffin in a clearing where flowers always bloomed.</p>
+                <p>One day, a prince riding through the forest saw the glass coffin and Snow White's beauty.</p>
+            </div>
+            <div class="audio-controls">
+                <button class="audio-btn" onclick="playSceneAudio('scene20')">🔊 英語音声を再生</button>
+                <button class="audio-btn" onclick="stopAudio()">⏹️ 停止</button>
+            </div>
+            <div class="choices">
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="selectChoiceAndGoToScene('ending-good', 'The prince awakens her with true loves kiss')">The prince awakens her with true love's kiss</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('The prince awakens her with true loves kiss')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene20', 'The prince takes the coffin away')">The prince takes the coffin away</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('The prince takes the coffin away')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="showWrongChoice('scene20', 'The prince rides away')">The prince rides away</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('The prince rides away')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Perfect Ending -->
+        <div id="ending-perfect" class="scene hidden">
+            <div class="story-text">
+                <h2 style="color: #28a745; text-align: center;">🎉 完璧なエンディング！</h2>
+                <p>Snow White learned from every experience and listened to wise advice.</p>
+                <p>Because of her wisdom and caution, she avoided all the queen's traps!</p>
+                <p>She lived safely and happily with the seven dwarfs, and eventually the evil queen's magic mirror broke, freeing the kingdom from her vanity.</p>
+                <p>Snow White's kindness and wisdom made her beloved by all who knew her.</p>
+                <p><strong>Outstanding! You showed perfect judgment and wisdom throughout the story!</strong></p>
+            </div>
+            <div style="padding: 20px 0;">
+                
+            </div>
+            <div class="choices">
+                <div class="choice-container">
+                    <button class="choice-button-main restart-btn" onclick="restartGame()">Play Again</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Play Again')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main home-btn" onclick="location.href='index.html'">← ルール説明に戻る</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Return to rules explanation')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Good Ending -->
+        <div id="ending-good" class="scene hidden">
+            <div class="story-text">
+                <h2 style="color: #28a745; text-align: center;">🎉 ハッピーエンディング！</h2>
+                <p>The prince's kiss of true love awakened Snow White from the magical sleep!</p>
+                <p>The piece of poisoned apple fell from her lips, and she opened her eyes.</p>
+                <p>Snow White and the prince were married, and the seven dwarfs were honored guests at their wedding.</p>
+                <p>When the evil queen looked in her mirror and saw that Snow White was alive and happy, the mirror shattered, and the queen's power was broken forever.</p>
+                <p><strong>Congratulations! You completed Snow White's extended adventure!</strong></p>
+            </div>
+            <div style="padding: 20px 0;">
+                
+            </div>
+            <div class="choices">
+                <div class="choice-container">
+                    <button class="choice-button-main restart-btn" onclick="restartGame()">Play Again</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Play Again')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main home-btn" onclick="location.href='index.html'">← ルール説明に戻る</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Return to rules explanation')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="wrong-message" class="scene hidden">
+            <!-- Choice explanation area for wrong choices -->
+            <div id="wrong-message-explanation" class="choice-explanation wrong hidden">
+                <h3>あなたが選んだ選択肢</h3>
+                <div class="choice-display">
+                    <div class="english-text">
+                        <span id="wrong-message-choice-text"></span>
+                    </div>
+                    <div class="japanese-text" id="wrong-message-choice-translation"></div>
+                </div>
+                <div class="explanation-text" id="wrong-message-choice-explanation"></div>
+            </div>
+            <div class="section-divider hidden" id="wrong-message-divider" style="height: 20px; border-bottom: 1px solid rgba(220, 53, 69, 0.2); margin: 20px 0;"></div>
+            
+            <div class="story-text" data-scene="wrong-message">
+                <p>🚫 <span class="negative-feedback">Oops!</span> That choice doesn't match the real Snow White story.</p>
+                <p>In the traditional story, Snow White is kind, polite, and listens to good advice.</p>
+                <p>Try again and choose the answer that shows kindness and wisdom!</p>
+            </div>
+            <div class="choices">
+                <div class="choice-container">
+                    <button class="choice-button-main" onclick="goBack()">Try Again</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Try Again')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main restart-btn" onclick="restartGame()">Start Over</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Start Over')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+                <div class="choice-container">
+                    <button class="choice-button-main home-btn" onclick="location.href='index.html'">← ルール説明に戻る</button>
+                    <button class="choice-audio-btn" onclick="playChoiceAudio('Return to rules explanation')" title="この選択肢の音声を再生">🔊</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game state variables
+        let currentScene = 'scene1';
+        let previousScene = 'scene1';
+        let currentSceneNumber = 1;
+        const totalScenes = 20;
+        
+        // Audio variables
+        let currentSpeech = null;
+        
+        // Store selected choice information
+        let selectedChoiceInfo = {
+            text: '',
+            translation: '',
+            explanation: ''
+        };
+        
+        // Store previous question information
+        let previousQuestionInfo = {
+            text: '',
+            translation: ''
+        };
+        
+        // Question translations for Extended Snow White
+        const questionTranslations = {
+            "What should she do?": "彼女はどうすべきでしょうか？",
+            "What should the huntsman do?": "猟師はどうすべきでしょうか？",
+            "What should Snow White do?": "白雪姫はどうすべきでしょうか？",
+            "What should the queen do?": "女王はどうすべきでしょうか？",
+            "What should the seven dwarfs do?": "七人の小人はどうすべきでしょうか？",
+            "What should the prince do?": "王子はどうすべきでしょうか？"
+        };
+        
+        // Basic translation dictionary for Extended Snow White choices
+        const choiceTranslations = {
+            // Common patterns for the extended version
+            "Accept": {
+                translation: "受け入れる",
+                explanation: "正解！白雪姫は優しく受け入れる心を持っています。"
+            },
+            "Be kind and helpful": {
+                translation: "親切で助けになる",
+                explanation: "正解！白雪姫の最も美しい特徴は心の優しさです。"
+            },
+            "Listen to good advice": {
+                translation: "良いアドバイスに耳を傾ける",
+                explanation: "正解！賢明な白雪姫は他人の良い助言を大切にします。"
+            },
+            "Stay safe": {
+                translation: "安全でいる",
+                explanation: "正解！安全を守ることは大切な知恵です。"
+            },
+            "Trust the dwarfs": {
+                translation: "小人たちを信頼する",
+                explanation: "正解！小人たちは白雪姫を心から大切に思っています。"
+            }
+        };
+
+        // Extended scene audio content
+        const sceneAudioContent = {
+            'scene1': "Long ago, in a magnificent castle, lived a beautiful but vain queen. She owned a magical mirror that could answer any question with the truth. Every morning, the queen would stand before the mirror and ask her favorite question.",
+            'scene2': "Mirror, mirror on the wall, who is the fairest of them all? asked the queen. For years, the mirror had always answered: You are the fairest, my queen. But this day, the mirror gave a different answer: You are fair, but Snow White is the fairest of all!",
+            'scene3': "Meanwhile, Snow White was in the castle garden, singing sweetly to the birds. She was kind to all the animals and servants. Everyone in the castle loved her. Snow White had no idea that her beauty was causing such jealousy in her stepmother's heart.",
+            'scene4': "The evil queen could not bear to be second in beauty. Her jealousy grew stronger each day. She called for her most trusted huntsman and gave him a terrible order. Take Snow White deep into the forest and make sure she never returns to the castle.",
+            'scene5': "The huntsman had watched Snow White grow up. She was like a daughter to him. But he also feared the queen's anger if he disobeyed her orders. With a heavy heart, he approached Snow White and asked her to come with him into the forest.",
+            'scene6': "Deep in the dark forest, the huntsman could no longer hide his sorrow. He fell to his knees and told Snow White the truth about the queen's evil plan. You must run away and never return to the castle, he said with tears in his eyes.",
+            'scene7': "Snow White ran through the forest as darkness fell. She was frightened and lost. Strange sounds echoed through the trees, and she stumbled over roots and rocks. Just when she thought she could run no more, she saw a warm light ahead.",
+            'scene8': "The light came from a tiny cottage with diamond-shaped windows. Everything about the house was small and neat. Even the door was only half her height! Snow White knocked gently on the little door, but no one answered.",
+            'scene9': "Inside, Snow White found seven of everything: seven little beds, seven little chairs, seven little plates. The cottage was very messy, with dirty dishes and dust everywhere. Snow White was very tired, but she felt sorry for whoever lived in such a messy place.",
+            'scene10': "After cleaning all day, Snow White fell asleep across the seven little beds. In the evening, the seven dwarfs returned from working in the diamond mines. Someone has been in our house! they exclaimed, but they saw how clean everything was.",
+            'scene11': "Snow White woke up to see seven kind faces looking at her with curiosity, not anger. She told them her sad story about the evil queen and the huntsman's warning. The dwarfs listened with sympathy and understanding.",
+            'scene12': "You may stay with us, said Doc, the leader of the dwarfs. But you must promise to be very careful. Never let strangers into the cottage. The evil queen has powerful magic and might find you, warned Grumpy.",
+            'scene13': "Snow White spent happy days with the seven dwarfs. She cooked delicious meals, mended their clothes, and kept the cottage spotlessly clean. In return, the dwarfs protected her and brought her gifts from the forest.",
+            'scene14': "Meanwhile, the evil queen asked her magic mirror the same question every day. One morning, the mirror revealed the truth: Snow White still lives, beyond the seven hills, with the seven dwarfs. The queen's rage knew no bounds. She decided to take matters into her own hands.",
+            'scene15': "Disguised as an old woman selling beautiful ribbons, the queen came to the cottage. Pretty ribbons for a pretty maiden! she called out in a disguised voice. Snow White remembered the dwarfs' warning, but the ribbons were so beautiful.",
+            'scene16-bad': "Snow White opened the door, and the queen quickly offered to lace up her bodice with a beautiful ribbon. But the queen pulled the laces so tight that Snow White could barely breathe! She fainted and fell to the floor. The evil queen left, thinking she was dead.",
+            'scene16-good': "Thank you, but I cannot open the door, Snow White said politely through the window. The dwarfs warned me not to let any strangers inside. The disguised queen became angry and left, but Snow White remained safe.",
+            'scene17': "When the seven dwarfs returned home, they found Snow White unconscious on the floor. The evil queen was here! cried Doc, immediately cutting the tight laces. Snow White slowly began to breathe normally again.",
+            'scene18': "The dwarfs warned Snow White even more seriously about strangers. But the next day, the queen returned disguised as a different old woman selling beautiful red apples. Sweet apples! The most delicious apples in the kingdom! she called out.",
+            'scene19-good': "No, thank you, Snow White said firmly. I learned my lesson yesterday. I will not accept anything from strangers, no matter how beautiful it looks. The queen left in fury, and Snow White remained safe once again.",
+            'scene19-bad': "Despite all the warnings, Snow White was tempted by the beautiful red apple. She opened the window, and the queen handed her the apple. As soon as Snow White took one bite, she fell into a deep, magical sleep.",
+            'scene20': "The dwarfs tried everything, but could not wake Snow White from the magical sleep. They placed her in a beautiful glass coffin in a clearing where flowers always bloomed. One day, a prince riding through the forest saw the glass coffin and Snow White's beauty."
+        };
+
+        // Extended choice audio content
+        const choiceAudioContent = {
+            'Ask the mirror who is the fairest': 'Ask the mirror who is the fairest',
+            'Ask about the weather': 'Ask about the weather',
+            'Ignore the mirror completely': 'Ignore the mirror completely',
+            'Become jealous and angry': 'Become jealous and angry',
+            'Be happy for Snow White': 'Be happy for Snow White',
+            'Break the mirror in confusion': 'Break the mirror in confusion',
+            'Continue her innocent daily activities': 'Continue her innocent daily activities',
+            'Boast about her beauty': 'Boast about her beauty',
+            'Compete with the queen': 'Compete with the queen',
+            'The huntsman feels troubled by this order': 'The huntsman feels troubled by this order',
+            'The huntsman agrees immediately': 'The huntsman agrees immediately',
+            'The huntsman refuses outright': 'The huntsman refuses outright',
+            'Snow White trustingly follows him': 'Snow White trustingly follows him',
+            'Snow White becomes suspicious': 'Snow White becomes suspicious',
+            'Snow White refuses to go': 'Snow White refuses to go',
+            'Thank the huntsman and run deeper into the forest': 'Thank the huntsman and run deeper into the forest',
+            'Try to return to the castle': 'Try to return to the castle',
+            'Ask the huntsman to help fight the queen': 'Ask the huntsman to help fight the queen',
+            'Approach the light cautiously': 'Approach the light cautiously',
+            'Hide and avoid the light': 'Hide and avoid the light',
+            'Call out loudly for help': 'Call out loudly for help',
+            'Carefully enter the unlocked cottage': 'Carefully enter the unlocked cottage',
+            'Break down the door': 'Break down the door',
+            'Sleep outside the cottage': 'Sleep outside the cottage',
+            'Clean the cottage as a thank you': 'Clean the cottage as a thank you',
+            'Go to sleep immediately': 'Go to sleep immediately',
+            'Eat all the food on the table': 'Eat all the food on the table',
+            'The dwarfs gently wake Snow White': 'The dwarfs gently wake Snow White',
+            'The dwarfs get angry about the intrusion': 'The dwarfs get angry about the intrusion',
+            'The dwarfs call the authorities': 'The dwarfs call the authorities',
+            'The dwarfs offer to let her stay': 'The dwarfs offer to let her stay',
+            'The dwarfs turn her away': 'The dwarfs turn her away',
+            'The dwarfs demand payment': 'The dwarfs demand payment',
+            'Promise to be careful and grateful': 'Promise to be careful and grateful',
+            'Dismiss their warnings as silly': 'Dismiss their warnings as silly',
+            'Say she can take care of herself': 'Say she can take care of herself',
+            'Continue this peaceful, happy life': 'Continue this peaceful, happy life',
+            'Become lazy and demanding': 'Become lazy and demanding',
+            'Plan to return to the castle': 'Plan to return to the castle',
+            'The queen disguises herself as an old peddler': 'The queen disguises herself as an old peddler',
+            'The queen gives up her evil plan': 'The queen gives up her evil plan',
+            'The queen sends an army': 'The queen sends an army',
+            'Open the door to see the ribbons': 'Open the door to see the ribbons',
+            'Remember the warning and stay inside': 'Remember the warning and stay inside',
+            'Call for the dwarfs to come home': 'Call for the dwarfs to come home',
+            'Wait for the dwarfs to return and save her': 'Wait for the dwarfs to return and save her',
+            'Try to remove the laces herself': 'Try to remove the laces herself',
+            'Give up hope': 'Give up hope',
+            'Tell the dwarfs about the visitor': 'Tell the dwarfs about the visitor',
+            'Keep it a secret': 'Keep it a secret',
+            'Follow the old woman': 'Follow the old woman',
+            'Learn from this dangerous experience': 'Learn from this dangerous experience',
+            'Blame the dwarfs for not being there': 'Blame the dwarfs for not being there',
+            'Decide to leave the cottage': 'Decide to leave the cottage',
+            'Remember all the warnings and refuse': 'Remember all the warnings and refuse',
+            'Be tempted by the beautiful apple': 'Be tempted by the beautiful apple',
+            'Ask the woman to come inside': 'Ask the woman to come inside',
+            'Live happily ever after with wisdom': 'Live happily ever after with wisdom',
+            'Become overconfident': 'Become overconfident',
+            'Plan revenge against the queen': 'Plan revenge against the queen',
+            'The dwarfs find her in the magical sleep': 'The dwarfs find her in the magical sleep',
+            'Snow White wakes up immediately': 'Snow White wakes up immediately',
+            'The queen stays to help': 'The queen stays to help',
+            'The prince awakens her with true loves kiss': 'The prince awakens her with true loves kiss',
+            'The prince takes the coffin away': 'The prince takes the coffin away',
+            'The prince rides away': 'The prince rides away',
+            'Play Again': 'Play Again',
+            'Try Again': 'Try Again',
+            'Start Over': 'Start Over',
+            'Return to rules explanation': 'Return to rules explanation'
+        };
+
+        function playSceneAudio(sceneId) {
+            // Stop any current speech
+            stopAudio();
+            
+            const storyTextDiv = document.querySelector(`[data-scene="${sceneId}"]`);
+            if (!storyTextDiv) return;
+            
+            const paragraphs = storyTextDiv.querySelectorAll('p');
+            let textToSpeak = '';
+            
+            // Combine all paragraph text, removing emojis and special characters for better speech
+            paragraphs.forEach(p => {
+                let text = p.textContent || p.innerText;
+                // Clean text for speech (remove emojis, special symbols)
+                text = text.replace(/[🍑🎉🏆🚫🔊⏹️😢]/g, '');
+                text = text.replace(/[^\w\s.,!?-]/g, '');
+                textToSpeak += text + ' ';
+            });
+            
+            if (textToSpeak.trim() === '') return;
+            
+            // Check if speech synthesis is supported
+            if ('speechSynthesis' in window) {
+                currentSpeech = new SpeechSynthesisUtterance(textToSpeak);
+                
+                // Configure speech settings
+                currentSpeech.lang = 'en-US';
+                currentSpeech.rate = 0.6; // Slower for learning
+                currentSpeech.pitch = 1.0;
+                currentSpeech.volume = 1.0;
+                
+                // Start speech
+                speechSynthesis.speak(currentSpeech);
+            } else {
+                alert('お使いのブラウザは音声機能をサポートしていません。');
+            }
+        }
+
+        function playChoiceAudio(choiceText) {
+            stopAudio();
+            
+            if (choiceAudioContent[choiceText]) {
+                const utterance = new SpeechSynthesisUtterance(choiceAudioContent[choiceText]);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.8;
+                utterance.pitch = 1;
+                utterance.volume = 0.8;
+                
+                currentAudio = utterance;
+                speechSynthesis.speak(utterance);
+            }
+        }
+
+        function stopAudio() {
+            if (currentSpeech) {
+                speechSynthesis.cancel();
+                currentSpeech = null;
+            }
+        }
+
+        function goToScene(sceneId) {
+            // Hide all scenes first
+            const allScenes = document.querySelectorAll('.scene');
+            allScenes.forEach(scene => scene.classList.add('hidden'));
+            
+            // Show new scene
+            previousScene = currentScene;
+            currentScene = sceneId;
+            
+            // Update scene number
+            if (sceneId.startsWith('scene')) {
+                currentSceneNumber = parseInt(sceneId.replace('scene', ''));
+                updateProgress();
+            }
+            
+            // Show new scene
+            const newSceneElement = document.getElementById(sceneId);
+            if (newSceneElement) {
+                newSceneElement.classList.remove('hidden');
+                
+                // Shuffle choices for the new scene
+                initializeSceneChoices(sceneId);
+                
+                // Smooth scroll to top
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                
+                // Add fade-in animation
+                newSceneElement.classList.add('fade-in');
+                setTimeout(() => {
+                    newSceneElement.classList.remove('fade-in');
+                }, 800);
+            } else {
+                console.error('Scene element not found: ' + sceneId);
+            }
+        }
+
+        function updateProgress() {
+            const progressPercentage = (currentSceneNumber / totalScenes) * 100;
+            document.getElementById('progress-fill').style.width = progressPercentage + '%';
+            document.getElementById('scene-progress').textContent = `Scene ${currentSceneNumber} of ${totalScenes}`;
+        }
+
+        function displayChoiceExplanation(sceneId) {
+            // This function will look for explanation elements in any scene
+            // If they don't exist, it will skip silently
+            const explanationDiv = document.getElementById(sceneId + '-explanation');
+            const dividerDiv = document.getElementById(sceneId + '-divider');
+            const choiceTextSpan = document.getElementById(sceneId + '-choice-text');
+            const translationDiv = document.getElementById(sceneId + '-choice-translation');
+            const explanationTextDiv = document.getElementById(sceneId + '-choice-explanation');
+            
+            // Previous question elements
+            const previousQuestionDiv = document.getElementById(sceneId + '-previous-question');
+            const previousQuestionTranslationDiv = document.getElementById(sceneId + '-previous-question-translation');
+            
+            // Only proceed if the basic elements exist
+            if (explanationDiv && choiceTextSpan && translationDiv && explanationTextDiv) {
+                // Populate the choice content safely using textContent
+                choiceTextSpan.textContent = selectedChoiceInfo.text;
+                translationDiv.textContent = selectedChoiceInfo.translation;
+                explanationTextDiv.textContent = selectedChoiceInfo.explanation;
+                
+                // Populate previous question if elements exist
+                if (previousQuestionDiv && previousQuestionTranslationDiv && previousQuestionInfo.text) {
+                    previousQuestionDiv.textContent = previousQuestionInfo.text;
+                    previousQuestionTranslationDiv.textContent = previousQuestionInfo.translation;
+                }
+                
+                // Show the explanation elements
+                explanationDiv.classList.remove('hidden');
+                if (dividerDiv) {
+                    dividerDiv.classList.remove('hidden');
+                }
+            }
+        }
+        
+        function selectChoiceAndGoToScene(nextSceneId, selectedChoice) {
+            // Extract previous question from current scene
+            const currentSceneElement = document.getElementById(currentScene);
+            if (currentSceneElement) {
+                const storyTextElement = currentSceneElement.querySelector('.story-text');
+                if (storyTextElement) {
+                    const paragraphs = storyTextElement.querySelectorAll('p');
+                    if (paragraphs.length > 0) {
+                        const lastParagraph = paragraphs[paragraphs.length - 1];
+                        const questionText = lastParagraph.textContent.trim();
+                        
+                        // Store previous question info
+                        previousQuestionInfo = {
+                            text: questionText,
+                            translation: questionTranslations[questionText] || 'この問題の翻訳が見つかりません'
+                        };
+                    }
+                }
+            }
+            
+            // Look up translation and explanation from the dictionary
+            const choiceData = choiceTranslations[selectedChoice];
+            
+            if (choiceData) {
+                // Store the selected choice information
+                selectedChoiceInfo = {
+                    text: selectedChoice,
+                    translation: choiceData.translation,
+                    explanation: choiceData.explanation
+                };
+            } else {
+                // Fallback if translation not found
+                selectedChoiceInfo = {
+                    text: selectedChoice,
+                    translation: '翻訳が見つかりません',
+                    explanation: 'この選択肢の説明が見つかりません。'
+                };
+            }
+            
+            goToScene(nextSceneId);
+            
+            // Display the explanation if elements exist
+            displayChoiceExplanation(nextSceneId);
+        }
+
+        function showWrongChoice(fromScene, selectedChoice = '') {
+            previousScene = fromScene;
+            
+            // Look up translation and explanation from the dictionary
+            const choiceData = choiceTranslations[selectedChoice];
+            
+            if (choiceData) {
+                // Store the selected choice information
+                selectedChoiceInfo = {
+                    text: selectedChoice,
+                    translation: choiceData.translation,
+                    explanation: choiceData.explanation
+                };
+            } else {
+                // Fallback if translation not found
+                selectedChoiceInfo = {
+                    text: selectedChoice,
+                    translation: '翻訳が見つかりません',
+                    explanation: 'この選択肢の説明が見つかりません。'
+                };
+            }
+            
+            goToScene('wrong-message');
+            
+            // Display the explanation
+            displayChoiceExplanation('wrong-message');
+        }
+
+        function goBack() {
+            // Simple direct approach
+            currentSceneNumber = parseInt(previousScene.replace('scene', ''));
+            goToScene(previousScene);
+        }
+
+        function restartGame() {
+            // Hide all scenes
+            const scenes = document.querySelectorAll('.scene');
+            scenes.forEach(scene => {
+                scene.classList.add('hidden');
+                // Hide any visible explanations
+                const explanation = scene.querySelector('.choice-explanation');
+                const divider = scene.querySelector('.section-divider');
+                if (explanation) explanation.classList.add('hidden');
+                if (divider) divider.classList.add('hidden');
+            });
+            
+            // Reset game state
+            currentScene = 'scene1';
+            previousScene = 'scene1';
+            currentSceneNumber = 1;
+            selectedChoiceInfo = { text: '', translation: '', explanation: '' };
+            
+            // Show first scene and update progress
+            document.getElementById('scene1').classList.remove('hidden');
+            updateProgress();
+            
+            // Shuffle choices for the first scene
+            initializeSceneChoices('scene1');
+            
+            // Stop audio and scroll to top
+            stopAudio();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Choice shuffling functions
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function shuffleChoices(sceneId) {
+            const scene = document.getElementById(sceneId);
+            if (!scene) return;
+            
+            const choicesContainer = scene.querySelector('.choices');
+            if (!choicesContainer) return;
+            
+            const choiceContainers = Array.from(choicesContainer.querySelectorAll('.choice-container'));
+            if (choiceContainers.length > 1) {
+                shuffleArray(choiceContainers);
+                choiceContainers.forEach(container => {
+                    choicesContainer.appendChild(container);
+                });
+            }
+        }
+
+        function initializeSceneChoices(sceneId) {
+            // Shuffle choices when scene is displayed
+            shuffleChoices(sceneId);
+        }
+
+        // Initialize
+        updateProgress();
+        initializeSceneChoices('scene1');
+    </script>
+</body>
+</html>

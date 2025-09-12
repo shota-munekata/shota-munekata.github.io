@@ -1,0 +1,1350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Urashima Taro Adventure - English Gamebook</title>
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXXX" 
+            crossorigin="anonymous"></script>
+    <style>
+        body {
+            font-family: 'Hiragino Sans', 'ヒラギノ角ゴシック', 'Yu Gothic Medium', '游ゴシック Medium', YuGothic, '游ゴシック体', 'Meiryo', Arial, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            min-height: 100vh;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(79, 172, 254, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(0, 242, 254, 0.2) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .story-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.1),
+                0 2px 8px rgba(255, 255, 255, 0.2) inset;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .story-container::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #4facfe, #00f2fe, #4facfe, #00f2fe, #4facfe);
+            border-radius: 22px;
+            z-index: -1;
+            opacity: 0.1;
+        }
+        
+        .choices {
+            margin-top: 20px;
+        }
+        
+        /* Audio controls styling */
+        .audio-controls {
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+        
+        .audio-btn {
+            display: inline-block;
+            padding: 12px 24px;
+            margin: 0 8px;
+            background: linear-gradient(135deg, #17a2b8 0%, #117a8b 100%);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(23, 162, 184, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .audio-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(23, 162, 184, 0.4);
+        }
+        
+        .audio-btn:active {
+            transform: translateY(0);
+        }
+        
+        .audio-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s;
+        }
+        
+        .audio-btn:hover::before {
+            left: 100%;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #34495e;
+            font-size: 1.1em;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+        
+        .story-text {
+            font-size: 1.1em;
+            line-height: 1.8;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            text-align: justify;
+        }
+        
+        .story-text p {
+            margin-bottom: 15px;
+        }
+        
+        .choice-button {
+            display: block;
+            width: 100%;
+            padding: 15px 20px;
+            margin: 10px 0;
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+            position: relative;
+            overflow: hidden;
+            text-align: left;
+            border: 2px solid transparent;
+        }
+        
+        .choice-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        .choice-button:active {
+            transform: translateY(0);
+        }
+        
+        .choice-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s;
+        }
+        
+        .choice-button:hover::before {
+            left: 100%;
+        }
+        
+        .scene {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .scene:not(.hidden) {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { 
+                opacity: 0; 
+                transform: translateY(30px) scale(0.95);
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0) scale(1);
+            }
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        .choice-explanation {
+            background-color: #fff3cd;
+            border: 2px solid #ffeaa7;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 15px 0;
+            position: relative;
+        }
+        
+        .choice-explanation::before {
+            content: "💡";
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background-color: #fff3cd;
+            padding: 0 10px;
+            font-size: 1.2em;
+        }
+        
+        .choice-explanation h4 {
+            color: #856404;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        
+        .choice-explanation p {
+            color: #856404;
+            line-height: 1.6;
+            margin-bottom: 0;
+        }
+        
+        .previous-question {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid #4facfe;
+        }
+        
+        .choice-display {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid #00f2fe;
+        }
+        
+        .english-text {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .japanese-text {
+            color: #6c757d;
+            font-size: 0.9em;
+            font-style: italic;
+        }
+        
+        .explanation-text {
+            background-color: rgba(245, 245, 245, 0.9);
+            padding: 15px;
+            border-radius: 8px;
+            color: #495057;
+            line-height: 1.6;
+        }
+        
+        .positive-feedback {
+            color: #28a745;
+            font-weight: bold;
+        }
+        
+        .restart-btn {
+            background: linear-gradient(135deg, #fd79a8 0%, #e84393 100%) !important;
+            box-shadow: 0 4px 15px rgba(253, 121, 168, 0.3) !important;
+        }
+        
+        .restart-btn:hover {
+            box-shadow: 0 6px 20px rgba(253, 121, 168, 0.4) !important;
+        }
+        
+        .home-btn {
+            background: linear-gradient(135deg, #6c5ce7 0%, #5f27cd 100%) !important;
+            box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3) !important;
+        }
+        
+        .home-btn:hover {
+            box-shadow: 0 6px 20px rgba(108, 92, 231, 0.4) !important;
+        }
+        
+        .nav-link {
+            display: inline-block;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(116, 185, 255, 0.3);
+        }
+        
+        .nav-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(116, 185, 255, 0.4);
+            color: white;
+            text-decoration: none;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 10px 0;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+            position: relative;
+        }
+        
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .scene-counter {
+            text-align: center;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 0.95em;
+            margin-bottom: 5px;
+        }
+        
+        /* Choice explanation styling from momotaro */
+        .choice-explanation {
+            background: linear-gradient(135deg, #e8f5e8 0%, #f0f8ff 100%);
+            border: 2px solid #4CAF50;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .choice-explanation::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: 15px;
+            background: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            font-size: 18px;
+            display: none;
+        }
+        
+        .choice-explanation h3 {
+            color: #2e7d32;
+            margin: 0 0 20px 0;
+            font-size: 18px;
+            font-weight: 600;
+            line-height: 1.6;
+            padding-top: 5px;
+        }
+        
+        .choice-explanation h3::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            font-size: 20px;
+            display: none;
+        }
+        
+        .choice-display {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 4px solid #4CAF50;
+        }
+        
+        .choice-display .english-text {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1565c0;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .choice-display .japanese-text {
+            font-size: 15px;
+            color: #2e7d32;
+            font-weight: 500;
+        }
+        
+        .explanation-text {
+            font-size: 14px;
+            color: #424242;
+            line-height: 1.6;
+            background: rgba(255, 255, 255, 0.6);
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 3px solid #81c784;
+        }
+        
+        .choice-explanation.wrong {
+            background: linear-gradient(135deg, #fde8e8 0%, #ffebee 100%);
+            border: 2px solid #dc3545;
+        }
+        
+        .choice-explanation.wrong::before {
+            content: '';
+            display: none;
+        }
+        
+        .choice-explanation.wrong h3 {
+            color: #c62828;
+        }
+        
+        .choice-explanation.wrong h3::before {
+            content: '';
+            display: none;
+        }
+        
+        .choice-explanation.wrong .choice-display {
+            border-left: 4px solid #dc3545;
+        }
+        
+        .choice-explanation.wrong .choice-display .japanese-text {
+            color: #c62828;
+        }
+        
+        .choice-explanation.wrong .explanation-text {
+            border-left: 3px solid #ef5350;
+        }
+        
+        .negative-feedback {
+            color: #d32f2f !important;
+            font-weight: 600;
+        }
+        
+        .previous-question {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #4CAF50;
+            margin-bottom: 20px;
+        }
+        
+        .previous-question .english-text {
+            font-size: 16px;
+            color: #2e7d32;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .previous-question .japanese-text {
+            font-size: 14px;
+            color: #666;
+            font-style: italic;
+        }
+        
+        .section-divider {
+            height: 20px;
+            border-bottom: 1px solid rgba(79, 172, 254, 0.2);
+            margin: 20px 0;
+        }
+        
+        /* AdSense styling */
+        .adsense-container {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .adsense-label {
+            font-size: 12px;
+            color: #6c757d;
+            margin-bottom: 10px;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+            
+            .story-container {
+                padding: 25px;
+            }
+            
+            h1 {
+                font-size: 1.8em;
+            }
+            
+            .story-text {
+                font-size: 1em;
+            }
+            
+            .choice-button {
+                padding: 12px 16px;
+                font-size: 0.95em;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .story-container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 1.6em;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- Navigation -->
+    <div style="text-align: left; margin-bottom: 20px;">
+        <a href="index.html" class="nav-link">← ルール説明に戻る</a>
+    </div>
+    
+    <!-- AdSense 広告 (ヘッダー下) -->
+    <div class="adsense-container">
+        <div class="adsense-label">広告</div>
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-XXXXXXXXXXXXXXXXX"
+             data-ad-slot="XXXXXXXXXX"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+    
+    <!-- Progress Bar -->
+    <div style="text-align: center; margin: 20px 0;">
+        <div class="scene-counter" id="scene-progress" style="margin-bottom: 8px;">Scene 1 of 8</div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress-fill" style="width: 12.5%;"></div>
+        </div>
+    </div>
+    
+    <div class="story-container">
+        <h1>浦島太郎の冒険</h1>
+        <p class="subtitle">～海の中の不思議な世界～</p>
+        
+        <!-- Scene 1: The Fisherman's Life -->
+        <div id="scene1" class="scene">
+            <div class="story-text" data-scene="scene1">
+                <p>Once upon a time, there was a kind young fisherman named Urashima Taro.</p>
+                <p>Every day, he went fishing by the sea. He was very kind to all sea creatures.</p>
+                <p>One day, he saw some children on the beach. They were being mean to a turtle.</p>
+            </div>
+            <div class="audio-controls">
+                <button class="audio-btn" onclick="playSceneAudio('scene1')">🔊 英語音声を再生</button>
+                <button class="audio-btn" onclick="stopAudio()">⏹️ 停止</button>
+            </div>
+            <div class="choices">
+                <button class="choice-button" onclick="selectChoiceAndGoToScene('scene2', 'Help the turtle')">Help the turtle</button>
+                <button class="choice-button" onclick="showWrongChoice('scene1', 'Ignore and go fishing')">Ignore and go fishing</button>
+                <button class="choice-button" onclick="showWrongChoice('scene1', 'Join the children')">Join the children</button>
+            </div>
+        </div>
+
+        <!-- Scene 2: Saving the Turtle -->
+        <div id="scene2" class="scene hidden">
+            <!-- Choice explanation area (hidden by default) -->
+            <div id="scene2-explanation" class="choice-explanation hidden">
+                <h3>前の問題</h3>
+                <div class="previous-question">
+                    <div class="english-text" id="scene2-previous-question"></div>
+                    <div class="japanese-text" id="scene2-previous-question-translation"></div>
+                </div>
+                
+                <h3>あなたが選んだ選択肢</h3>
+                <div class="choice-display">
+                    <div class="english-text">
+                        <span id="scene2-choice-text"></span>
+                    </div>
+                    <div class="japanese-text" id="scene2-choice-translation"></div>
+                </div>
+                <div class="explanation-text" id="scene2-choice-explanation"></div>
+            </div>
+            <div class="section-divider hidden" id="scene2-divider"></div>
+            
+            <div class="story-text" data-scene="scene2">
+                <p><span class="positive-feedback">Good choice!</span> Taro went to the children and said, "Please don't hurt the turtle. It's a living creature."</p>
+                <p>The children stopped and ran away. The turtle was safe now.</p>
+                <p>What should Taro do next?</p>
+            </div>
+            <div class="audio-controls">
+                <button class="audio-btn" onclick="playSceneAudio('scene2')">🔊 英語音声を再生</button>
+                <button class="audio-btn" onclick="stopAudio()">⏹️ 停止</button>
+            </div>
+            <div class="choices">
+                <button class="choice-button" onclick="selectChoiceAndGoToScene('scene3', 'Release the turtle into the sea')">Release the turtle into the sea</button>
+                <button class="choice-button" onclick="showWrongChoice('scene2', 'Take the turtle home')">Take the turtle home</button>
+                <button class="choice-button" onclick="showWrongChoice('scene2', 'Continue fishing')">Continue fishing</button>
+            </div>
+        </div>
+
+        <!-- Scene 3: The Turtle's Gratitude -->
+        <div id="scene3" class="scene hidden">
+            <!-- Choice explanation area (hidden by default) -->
+            <div id="scene3-explanation" class="choice-explanation hidden">
+                <h3>前の問題</h3>
+                <div class="previous-question">
+                    <div class="english-text" id="scene3-previous-question"></div>
+                    <div class="japanese-text" id="scene3-previous-question-translation"></div>
+                </div>
+                
+                <h3>あなたが選んだ選択肢</h3>
+                <div class="choice-display">
+                    <div class="english-text">
+                        <span id="scene3-choice-text"></span>
+                    </div>
+                    <div class="japanese-text" id="scene3-choice-translation"></div>
+                </div>
+                <div class="explanation-text" id="scene3-choice-explanation"></div>
+            </div>
+            <div class="section-divider hidden" id="scene3-divider"></div>
+            <div class="story-text" data-scene="scene3">
+                <p><span class="positive-feedback">Perfect!</span> Taro gently carried the turtle to the water and released it.</p>
+                <p>The turtle swam happily in the sea. Then it came back to Taro.</p>
+                <p>"Thank you for saving me," said the turtle. "I want to repay your kindness."</p>
+            </div>
+            <div class="audio-controls">
+                <button class="audio-btn" onclick="playSceneAudio('scene3')">🔊 英語音声を再生</button>
+                <button class="audio-btn" onclick="stopAudio()">⏹️ 停止</button>
+            </div>
+            <div class="choices">
+                <button class="choice-button" onclick="selectChoiceAndGoToScene('scene4', 'Listen to the turtle')">Listen to the turtle</button>
+                <button class="choice-button" onclick="showWrongChoice('scene3', 'Say no reward needed')">Say no reward needed</button>
+                <button class="choice-button" onclick="showWrongChoice('scene3', 'Ask for money')">Ask for money</button>
+            </div>
+        </div>
+
+        <!-- Scene 4: Invitation to the Dragon Palace -->
+        <div id="scene4" class="scene hidden">
+            <!-- Choice explanation area (hidden by default) -->
+            <div id="scene4-explanation" class="choice-explanation hidden">
+                <h3>前の問題</h3>
+                <div class="previous-question">
+                    <div class="english-text" id="scene4-previous-question"></div>
+                    <div class="japanese-text" id="scene4-previous-question-translation"></div>
+                </div>
+                
+                <h3>あなたが選んだ選択肢</h3>
+                <div class="choice-display">
+                    <div class="english-text">
+                        <span id="scene4-choice-text"></span>
+                    </div>
+                    <div class="japanese-text" id="scene4-choice-translation"></div>
+                </div>
+                <div class="explanation-text" id="scene4-choice-explanation"></div>
+            </div>
+            <div class="section-divider hidden" id="scene4-divider"></div>
+            <div class="story-text" data-scene="scene4">
+                <p><span class="positive-feedback">Great choice!</span> The turtle said, "Please come with me to the Dragon Palace under the sea."</p>
+                <p>"The Dragon King wants to thank you. It will be a wonderful adventure!"</p>
+                <p>What should Taro do?</p>
+            </div>
+            <div class="audio-controls">
+                <button class="audio-btn" onclick="playSceneAudio('scene4')">🔊 英語音声を再生</button>
+                <button class="audio-btn" onclick="stopAudio()">⏹️ 停止</button>
+            </div>
+            <div class="choices">
+                <button class="choice-button" onclick="selectChoiceAndGoToScene('scene5', 'Accept the invitation')">Accept the invitation</button>
+                <button class="choice-button" onclick="showWrongChoice('scene4', 'Refuse politely')">Refuse politely</button>
+                <button class="choice-button" onclick="showWrongChoice('scene4', 'Ask to go tomorrow')">Ask to go tomorrow</button>
+            </div>
+        </div>
+
+        <!-- Scene 5: Journey to the Dragon Palace -->
+        <div id="scene5" class="scene hidden">
+            <!-- Choice explanation area (hidden by default) -->
+            <div id="scene5-explanation" class="choice-explanation hidden">
+                <h3>前の問題</h3>
+                <div class="previous-question">
+                    <div class="english-text" id="scene5-previous-question"></div>
+                    <div class="japanese-text" id="scene5-previous-question-translation"></div>
+                </div>
+                
+                <h3>あなたが選んだ選択肢</h3>
+                <div class="choice-display">
+                    <div class="english-text">
+                        <span id="scene5-choice-text"></span>
+                    </div>
+                    <div class="japanese-text" id="scene5-choice-translation"></div>
+                </div>
+                <div class="explanation-text" id="scene5-choice-explanation"></div>
+            </div>
+            <div class="section-divider hidden" id="scene5-divider"></div>
+            <div class="story-text" data-scene="scene5">
+                <p><span class="positive-feedback">Wonderful!</span> Taro climbed onto the turtle's back. They went deep into the sea.</p>
+                <p>Amazingly, Taro could breathe underwater! Soon they reached a beautiful palace.</p>
+                <p>The Dragon King and Princess welcomed Taro warmly.</p>
+            </div>
+            <div class="audio-controls">
+                <button class="audio-btn" onclick="playSceneAudio('scene5')">🔊 英語音声を再生</button>
+                <button class="audio-btn" onclick="stopAudio()">⏹️ 停止</button>
+            </div>
+            <div class="choices">
+                <button class="choice-button" onclick="selectChoiceAndGoToScene('scene6', 'Thank them for the invitation')">Thank them for the invitation</button>
+                <button class="choice-button" onclick="showWrongChoice('scene5', 'Ask for treasure immediately')">Ask for treasure immediately</button>
+                <button class="choice-button" onclick="showWrongChoice('scene5', 'Say you want to go home')">Say you want to go home</button>
+            </div>
+        </div>
+
+        <!-- Scene 6: Life in the Dragon Palace -->
+        <div id="scene6" class="scene hidden">
+            <!-- Choice explanation area (hidden by default) -->
+            <div id="scene6-explanation" class="choice-explanation hidden">
+                <h3>前の問題</h3>
+                <div class="previous-question">
+                    <div class="english-text" id="scene6-previous-question"></div>
+                    <div class="japanese-text" id="scene6-previous-question-translation"></div>
+                </div>
+                
+                <h3>あなたが選んだ選択肢</h3>
+                <div class="choice-display">
+                    <div class="english-text">
+                        <span id="scene6-choice-text"></span>
+                    </div>
+                    <div class="japanese-text" id="scene6-choice-translation"></div>
+                </div>
+                <div class="explanation-text" id="scene6-choice-explanation"></div>
+            </div>
+            <div class="section-divider hidden" id="scene6-divider"></div>
+            <div class="story-text" data-scene="scene6">
+                <p><span class="positive-feedback">Excellent!</span> Taro lived happily in the Dragon Palace for what felt like three days.</p>
+                <p>He enjoyed delicious food, beautiful music, and the Princess's company.</p>
+                <p>But then he started to feel homesick. What should he do?</p>
+            </div>
+            <div class="audio-controls">
+                <button class="audio-btn" onclick="playSceneAudio('scene6')">🔊 英語音声を再生</button>
+                <button class="audio-btn" onclick="stopAudio()">⏹️ 停止</button>
+            </div>
+            <div class="choices">
+                <button class="choice-button" onclick="selectChoiceAndGoToScene('scene7', 'Ask to return home')">Ask to return home</button>
+                <button class="choice-button" onclick="showWrongChoice('scene6', 'Stay forever')">Stay forever</button>
+                <button class="choice-button" onclick="showWrongChoice('scene6', 'Leave without saying goodbye')">Leave without saying goodbye</button>
+            </div>
+        </div>
+
+        <!-- Scene 7: The Tamatebako -->
+        <div id="scene7" class="scene hidden">
+            <!-- Choice explanation area (hidden by default) -->
+            <div id="scene7-explanation" class="choice-explanation hidden">
+                <h3>前の問題</h3>
+                <div class="previous-question">
+                    <div class="english-text" id="scene7-previous-question"></div>
+                    <div class="japanese-text" id="scene7-previous-question-translation"></div>
+                </div>
+                
+                <h3>あなたが選んだ選択肢</h3>
+                <div class="choice-display">
+                    <div class="english-text">
+                        <span id="scene7-choice-text"></span>
+                    </div>
+                    <div class="japanese-text" id="scene7-choice-translation"></div>
+                </div>
+                <div class="explanation-text" id="scene7-choice-explanation"></div>
+            </div>
+            <div class="section-divider hidden" id="scene7-divider"></div>
+            <div class="story-text" data-scene="scene7">
+                <p><span class="positive-feedback">Wise choice!</span> The Princess understood Taro's feelings. "You may return home," she said.</p>
+                <p>She gave him a beautiful box called Tamatebako.</p>
+                <p>"But promise me, never open this box," she said seriously.</p>
+            </div>
+            <div class="audio-controls">
+                <button class="audio-btn" onclick="playSceneAudio('scene7')">🔊 英語音声を再生</button>
+                <button class="audio-btn" onclick="stopAudio()">⏹️ 停止</button>
+            </div>
+            <div class="choices">
+                <button class="choice-button" onclick="selectChoiceAndGoToScene('scene8', 'Promise never to open it')">Promise never to open it</button>
+                <button class="choice-button" onclick="showWrongChoice('scene7', 'Ask why not')">Ask why not</button>
+                <button class="choice-button" onclick="showWrongChoice('scene7', 'Refuse the box')">Refuse the box</button>
+            </div>
+        </div>
+
+        <!-- Scene 8: The Sad Discovery -->
+        <div id="scene8" class="scene hidden">
+            <!-- Choice explanation area (hidden by default) -->
+            <div id="scene8-explanation" class="choice-explanation hidden">
+                <h3>前の問題</h3>
+                <div class="previous-question">
+                    <div class="english-text" id="scene8-previous-question"></div>
+                    <div class="japanese-text" id="scene8-previous-question-translation"></div>
+                </div>
+                
+                <h3>あなたが選んだ選択肢</h3>
+                <div class="choice-display">
+                    <div class="english-text">
+                        <span id="scene8-choice-text"></span>
+                    </div>
+                    <div class="japanese-text" id="scene8-choice-translation"></div>
+                </div>
+                <div class="explanation-text" id="scene8-choice-explanation"></div>
+            </div>
+            <div class="section-divider hidden" id="scene8-divider"></div>
+            <div class="story-text" data-scene="scene8">
+                <p><span class="positive-feedback">Good promise!</span> Taro returned to his village, but everything had changed!</p>
+                <p>His house was gone, and nobody knew him. 300 years had passed!</p>
+                <p>Feeling lonely and confused, Taro looked at the beautiful box.</p>
+            </div>
+            <div class="audio-controls">
+                <button class="audio-btn" onclick="playSceneAudio('scene8')">🔊 英語音声を再生</button>
+                <button class="audio-btn" onclick="stopAudio()">⏹️ 停止</button>
+            </div>
+            <div class="choices">
+                <button class="choice-button" onclick="selectChoiceAndGoToScene('ending-good', 'Keep the promise and never open the box')">Keep the promise and never open the box</button>
+                <button class="choice-button" onclick="selectChoiceAndGoToScene('ending-sad', 'Open the box in desperation')">Open the box in desperation</button>
+                <button class="choice-button" onclick="showWrongChoice('scene8', 'Throw the box away')">Throw the box away</button>
+            </div>
+        </div>
+
+        <!-- Good Ending -->
+        <div id="ending-good" class="scene hidden">
+            <div class="story-text">
+                <h2 style="color: #28a745; text-align: center;">🎉 おめでとうございます！</h2>
+                <p>Taro kept his promise to the Princess. He never opened the Tamatebako.</p>
+                <p>Because of his kindness and trustworthiness, the Princess appeared before him.</p>
+                <p>"You are truly a good man," she said. "Come back to the Dragon Palace and live happily with me forever."</p>
+                <p><strong>You completed Urashima Taro's adventure with the good ending!</strong></p>
+            </div>
+            <div style="padding: 20px 0;">
+                
+            </div>
+            <div class="choices">
+                <button class="choice-button restart-btn" onclick="restartGame()">Play Again</button>
+                <button class="choice-button home-btn" onclick="location.href='index.html'">← ルール説明に戻る</button>
+            </div>
+        </div>
+
+        <!-- Sad Ending -->
+        <div id="ending-sad" class="scene hidden">
+            <div class="story-text">
+                <h2 style="color: #dc3545; text-align: center;">😢 残念なエンディング</h2>
+                <p>Taro opened the Tamatebako. White smoke came out of the box.</p>
+                <p>Suddenly, Taro became a very old man! The box contained all the years he had spent in the Dragon Palace.</p>
+                <p>He realized too late that he should have kept his promise to the Princess.</p>
+                <p><strong>Remember: Always keep your promises!</strong></p>
+            </div>
+            <div style="padding: 20px 0;">
+                
+            </div>
+            <div class="choices">
+                <button class="choice-button restart-btn" onclick="restartGame()">Play Again</button>
+                <button class="choice-button home-btn" onclick="location.href='index.html'">← ルール説明に戻る</button>
+            </div>
+        </div>
+
+        <div id="wrong-message" class="scene hidden">
+            <!-- Choice explanation area for wrong choices -->
+            <div id="wrong-message-explanation" class="choice-explanation wrong hidden">
+                <h3>あなたが選んだ選択肢</h3>
+                <div class="choice-display">
+                    <div class="english-text">
+                        <span id="wrong-message-choice-text"></span>
+                    </div>
+                    <div class="japanese-text" id="wrong-message-choice-translation"></div>
+                </div>
+                <div class="explanation-text" id="wrong-message-choice-explanation"></div>
+            </div>
+            <div class="section-divider hidden" id="wrong-message-divider" style="height: 20px; border-bottom: 1px solid rgba(220, 53, 69, 0.2); margin: 20px 0;"></div>
+            
+            <div class="story-text" data-scene="wrong-message">
+                <p>🚫 <span class="negative-feedback">Oops!</span> That choice doesn't match the real Urashima Taro story.</p>
+                <p>In the traditional story, Urashima Taro is kind, honest, and keeps his promises.</p>
+                <p>Try again and choose the answer that shows kindness and honesty!</p>
+            </div>
+            <div class="choices">
+                <button class="choice-button" onclick="goBack()">Try Again</button>
+                <button class="choice-button restart-btn" onclick="restartGame()">Start Over</button>
+                <button class="choice-button home-btn" onclick="location.href='index.html'">← ルール説明に戻る</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game state variables
+        let currentScene = 'scene1';
+        let previousScene = 'scene1';
+        let currentSceneNumber = 1;
+        const totalScenes = 8;
+        
+        // Audio variables
+        let currentSpeech = null;
+        
+        // Store selected choice information
+        let selectedChoiceInfo = {
+            text: '',
+            translation: '',
+            explanation: ''
+        };
+        
+        // Store previous question information
+        let previousQuestionInfo = {
+            text: '',
+            translation: ''
+        };
+        
+        // Question translations for Urashima Taro
+        const questionTranslations = {
+            "One day, he saw some children on the beach. They were being mean to a turtle.": "ある日、彼は浜辺で子供たちがカメをいじめているのを見ました。",
+            "What should Taro do next?": "太郎は次に何をすべきでしょうか？",
+            "What should Taro do?": "太郎はどうすべきでしょうか？",
+            "But then he started to feel homesick. What should he do?": "でも、太郎はホームシックになりました。どうすべきでしょうか？",
+            "Feeling lonely and confused, Taro looked at the beautiful box.": "寂しくて混乱した太郎は、美しい箱を見つめました。"
+        };
+        
+        // Translation dictionary for Urashima Taro choices
+        const choiceTranslations = {
+            // Scene 1
+            "Help the turtle": {
+                translation: "カメを助ける",
+                explanation: "正解！浦島太郎は優しい心の持ち主です。困っている動物を助けるのが正しい選択です。"
+            },
+            "Ignore and go fishing": {
+                translation: "無視して釣りに行く",
+                explanation: "太郎は優しい漁師です。困っている生き物を見過ごすことはありません。"
+            },
+            "Join the children": {
+                translation: "子供たちに加わる",
+                explanation: "太郎は動物を大切にします。いじめに参加することは絶対にありません。"
+            },
+            
+            // Scene 2
+            "Release the turtle into the sea": {
+                translation: "カメを海に返す",
+                explanation: "正解！カメは海の生き物です。自然に返してあげるのが一番良い選択です。"
+            },
+            "Take the turtle home": {
+                translation: "カメを家に連れて帰る",
+                explanation: "カメは海で暮らすべき生き物です。家に連れて帰るのは適切ではありません。"
+            },
+            "Continue fishing": {
+                translation: "釣りを続ける",
+                explanation: "まずはカメの安全を確保することが大切です。釣りは後でもできます。"
+            },
+            
+            // Scene 3
+            "Listen to the turtle": {
+                translation: "カメの話を聞く",
+                explanation: "正解！恩返しをしたいというカメの気持ちを受け入れるのが良い選択です。"
+            },
+            "Say no reward needed": {
+                translation: "お礼は不要と言う",
+                explanation: "謙虚な気持ちは良いですが、カメの恩返しの気持ちを受け入れることも大切です。"
+            },
+            "Ask for money": {
+                translation: "お金を求める",
+                explanation: "太郎は欲深い人ではありません。お金を求めるのは太郎らしくありません。"
+            },
+            
+            // Scene 4
+            "Accept the invitation": {
+                translation: "招待を受け入れる",
+                explanation: "正解！新しい冒険を受け入れる勇気が太郎の魅力です。"
+            },
+            "Refuse politely": {
+                translation: "丁寧に断る",
+                explanation: "せっかくのカメの恩返しです。素直に受け入れる方が物語が進みます。"
+            },
+            "Ask to go tomorrow": {
+                translation: "明日行くと頼む",
+                explanation: "カメは今すぐ案内したがっています。延期する理由はありません。"
+            },
+            
+            // Scene 5
+            "Thank them for the invitation": {
+                translation: "招待に感謝する",
+                explanation: "正解！礼儀正しく感謝を示すのが太郎らしい行動です。"
+            },
+            "Ask for treasure immediately": {
+                translation: "すぐに宝を求める",
+                explanation: "太郎は欲深い人ではありません。まずは礼儀を大切にします。"
+            },
+            "Say you want to go home": {
+                translation: "家に帰りたいと言う",
+                explanation: "せっかく竜宮城に招かれたのです。まずは体験を楽しみましょう。"
+            },
+            
+            // Scene 6
+            "Ask to return home": {
+                translation: "家に帰りたいと頼む",
+                explanation: "正解！家族や故郷を思う気持ちは自然で美しいものです。"
+            },
+            "Stay forever": {
+                translation: "永遠にとどまる",
+                explanation: "家族のことを忘れてしまうのは良くありません。故郷への愛を大切にしましょう。"
+            },
+            "Leave without saying goodbye": {
+                translation: "挨拶せずに立ち去る",
+                explanation: "礼儀知らずな行動は太郎らしくありません。きちんと挨拶をしましょう。"
+            },
+            
+            // Scene 7
+            "Promise never to open it": {
+                translation: "絶対に開けないと約束する",
+                explanation: "正解！約束を守ることが太郎の美徳です。乙姫様との約束は大切にしましょう。"
+            },
+            "Ask why not": {
+                translation: "なぜダメなのか聞く",
+                explanation: "時には理由を聞かずに信じることも大切です。乙姫様を信頼しましょう。"
+            },
+            "Refuse the box": {
+                translation: "箱を断る",
+                explanation: "乙姫様の心遣いを受け入れることも礼儀の一つです。"
+            },
+            
+            // Scene 8
+            "Keep the promise and never open the box": {
+                translation: "約束を守り箱を開けない",
+                explanation: "正解！約束を守ることが最も大切です。誠実さが太郎の美徳です。"
+            },
+            "Open the box in desperation": {
+                translation: "絶望して箱を開ける",
+                explanation: "約束を破ってしまうと悲しい結果になります。辛くても約束を守りましょう。"
+            },
+            "Throw the box away": {
+                translation: "箱を捨てる",
+                explanation: "乙姫様からの大切な贈り物です。粗末に扱うべきではありません。"
+            }
+        };
+
+
+        function playSceneAudio(sceneId) {
+            // Stop any current speech
+            stopAudio();
+            
+            const storyTextDiv = document.querySelector(`[data-scene="${sceneId}"]`);
+            if (!storyTextDiv) return;
+            
+            const paragraphs = storyTextDiv.querySelectorAll('p');
+            let textToSpeak = '';
+            
+            // Combine all paragraph text, removing emojis and special characters for better speech
+            paragraphs.forEach(p => {
+                let text = p.textContent || p.innerText;
+                // Clean text for speech (remove emojis, special symbols)
+                text = text.replace(/[🍑🎉🏆🚫🔊⏹️😢]/g, '');
+                text = text.replace(/[^\w\s.,!?-]/g, '');
+                textToSpeak += text + ' ';
+            });
+            
+            if (textToSpeak.trim() === '') return;
+            
+            // Check if speech synthesis is supported
+            if ('speechSynthesis' in window) {
+                currentSpeech = new SpeechSynthesisUtterance(textToSpeak);
+                
+                // Configure speech settings
+                currentSpeech.lang = 'en-US';
+                currentSpeech.rate = 0.6; // Slower for learning
+                currentSpeech.pitch = 1.0;
+                currentSpeech.volume = 1.0;
+                
+                // Start speech
+                speechSynthesis.speak(currentSpeech);
+            } else {
+                alert('お使いのブラウザは音声機能をサポートしていません。');
+            }
+        }
+
+
+        function stopAudio() {
+            if (currentSpeech) {
+                speechSynthesis.cancel();
+                currentSpeech = null;
+            }
+        }
+
+        function goToScene(sceneId) {
+            // Hide all scenes first
+            const allScenes = document.querySelectorAll('.scene');
+            allScenes.forEach(scene => scene.classList.add('hidden'));
+            
+            // Show new scene
+            previousScene = currentScene;
+            currentScene = sceneId;
+            
+            // Update scene number
+            if (sceneId.startsWith('scene')) {
+                currentSceneNumber = parseInt(sceneId.replace('scene', ''));
+                updateProgress();
+            }
+            
+            // Show new scene
+            const newSceneElement = document.getElementById(sceneId);
+            if (newSceneElement) {
+                newSceneElement.classList.remove('hidden');
+                
+                // Shuffle choices for the new scene
+                initializeSceneChoices(sceneId);
+                
+                // Smooth scroll to top
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                
+                // Add fade-in animation
+                newSceneElement.classList.add('fade-in');
+                setTimeout(() => {
+                    newSceneElement.classList.remove('fade-in');
+                }, 800);
+            } else {
+                console.error('Scene element not found: ' + sceneId);
+            }
+        }
+
+        function updateProgress() {
+            const progressPercentage = (currentSceneNumber / totalScenes) * 100;
+            document.getElementById('progress-fill').style.width = progressPercentage + '%';
+            document.getElementById('scene-progress').textContent = `Scene ${currentSceneNumber} of ${totalScenes}`;
+        }
+
+        function displayChoiceExplanation(sceneId) {
+            // Safe implementation using pre-existing HTML elements
+            const explanationDiv = document.getElementById(sceneId + '-explanation');
+            const dividerDiv = document.getElementById(sceneId + '-divider');
+            const choiceTextSpan = document.getElementById(sceneId + '-choice-text');
+            const translationDiv = document.getElementById(sceneId + '-choice-translation');
+            const explanationTextDiv = document.getElementById(sceneId + '-choice-explanation');
+            
+            // Previous question elements
+            const previousQuestionDiv = document.getElementById(sceneId + '-previous-question');
+            const previousQuestionTranslationDiv = document.getElementById(sceneId + '-previous-question-translation');
+            
+            // Check if all elements exist (safety check)
+            if (!explanationDiv || !choiceTextSpan || !translationDiv || !explanationTextDiv) {
+                console.log('Explanation elements not found for ' + sceneId);
+                return;
+            }
+            
+            // Populate the choice content safely using textContent
+            choiceTextSpan.textContent = selectedChoiceInfo.text;
+            translationDiv.textContent = selectedChoiceInfo.translation;
+            explanationTextDiv.textContent = selectedChoiceInfo.explanation;
+            
+            // Populate previous question if elements exist
+            if (previousQuestionDiv && previousQuestionTranslationDiv && previousQuestionInfo.text) {
+                previousQuestionDiv.textContent = previousQuestionInfo.text;
+                previousQuestionTranslationDiv.textContent = previousQuestionInfo.translation;
+            }
+            
+            // Show the explanation elements
+            explanationDiv.classList.remove('hidden');
+            if (dividerDiv) {
+                dividerDiv.classList.remove('hidden');
+            }
+        }
+        
+        function selectChoiceAndGoToScene(nextSceneId, selectedChoice) {
+            // Extract previous question from current scene
+            const currentSceneElement = document.getElementById(currentScene);
+            if (currentSceneElement) {
+                const storyTextElement = currentSceneElement.querySelector('.story-text');
+                if (storyTextElement) {
+                    const paragraphs = storyTextElement.querySelectorAll('p');
+                    if (paragraphs.length > 0) {
+                        const lastParagraph = paragraphs[paragraphs.length - 1];
+                        const questionText = lastParagraph.textContent.trim();
+                        
+                        // Store previous question info
+                        previousQuestionInfo = {
+                            text: questionText,
+                            translation: questionTranslations[questionText] || 'この問題の翻訳が見つかりません'
+                        };
+                    }
+                }
+            }
+            
+            // Look up translation and explanation from the dictionary
+            const choiceData = choiceTranslations[selectedChoice];
+            
+            if (choiceData) {
+                // Store the selected choice information
+                selectedChoiceInfo = {
+                    text: selectedChoice,
+                    translation: choiceData.translation,
+                    explanation: choiceData.explanation
+                };
+            } else {
+                // Fallback if translation not found
+                selectedChoiceInfo = {
+                    text: selectedChoice,
+                    translation: '翻訳が見つかりません',
+                    explanation: 'この選択肢の説明が見つかりません。'
+                };
+            }
+            
+            goToScene(nextSceneId);
+            
+            // Display the explanation
+            displayChoiceExplanation(nextSceneId);
+        }
+
+        function showWrongChoice(fromScene, selectedChoice = '') {
+            previousScene = fromScene;
+            
+            // Look up translation and explanation from the dictionary
+            const choiceData = choiceTranslations[selectedChoice];
+            
+            if (choiceData) {
+                // Store the selected choice information
+                selectedChoiceInfo = {
+                    text: selectedChoice,
+                    translation: choiceData.translation,
+                    explanation: choiceData.explanation
+                };
+            } else {
+                // Fallback if translation not found
+                selectedChoiceInfo = {
+                    text: selectedChoice,
+                    translation: '翻訳が見つかりません',
+                    explanation: 'この選択肢の説明が見つかりません。'
+                };
+            }
+            
+            goToScene('wrong-message');
+            
+            // Display the explanation
+            displayChoiceExplanation('wrong-message');
+        }
+
+        function goBack() {
+            // Simple direct approach
+            currentSceneNumber = parseInt(previousScene.replace('scene', ''));
+            goToScene(previousScene);
+        }
+
+        function restartGame() {
+            // Hide all scenes
+            const scenes = document.querySelectorAll('.scene');
+            scenes.forEach(scene => {
+                scene.classList.add('hidden');
+                // Hide any visible explanations
+                const explanation = scene.querySelector('.choice-explanation');
+                const divider = scene.querySelector('.section-divider');
+                if (explanation) explanation.classList.add('hidden');
+                if (divider) divider.classList.add('hidden');
+            });
+            
+            // Reset game state
+            currentScene = 'scene1';
+            previousScene = 'scene1';
+            currentSceneNumber = 1;
+            selectedChoiceInfo = { text: '', translation: '', explanation: '' };
+            
+            // Show first scene and update progress
+            document.getElementById('scene1').classList.remove('hidden');
+            updateProgress();
+            
+            // Shuffle choices for the first scene
+            initializeSceneChoices('scene1');
+            
+            // Stop audio and scroll to top
+            stopAudio();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Choice shuffling functions
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function shuffleChoices(sceneId) {
+            const scene = document.getElementById(sceneId);
+            if (!scene) return;
+            
+            const choicesContainer = scene.querySelector('.choices');
+            if (!choicesContainer) return;
+            
+            const choiceContainers = Array.from(choicesContainer.querySelectorAll('.choice-container'));
+            if (choiceContainers.length > 1) {
+                shuffleArray(choiceContainers);
+                choiceContainers.forEach(container => {
+                    choicesContainer.appendChild(container);
+                });
+            }
+        }
+
+        function initializeSceneChoices(sceneId) {
+            // Shuffle choices when scene is displayed
+            shuffleChoices(sceneId);
+        }
+
+        // Initialize
+        updateProgress();
+        initializeSceneChoices('scene1');
+    </script>
+</body>
+</html>

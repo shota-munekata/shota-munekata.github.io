@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>まなタップ</title>
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXXX" 
+            crossorigin="anonymous"></script>
+    <style>
+        body {
+            font-family: 'Hiragino Kaku Gothic Pro', 'ヒラギノ角ゴ Pro', 'Yu Gothic Medium', '游ゴシック Medium', YuGothic, '游ゴシック体', 'Meiryo', sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            min-height: 100vh;
+        }
+        .container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .combined-logo {
+            height: 240px;
+            width: auto;
+        }
+        .subtitle {
+            text-align: center;
+            color: #6c757d;
+            font-size: 1.2em;
+            margin-bottom: 30px;
+        }
+        .section {
+            margin: 30px 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            border-left: 5px solid #28a745;
+        }
+        .section h2 {
+            color: #28a745;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+        .section p, .section li {
+            line-height: 1.8;
+            font-size: 1.1em;
+            color: #333;
+        }
+        .rules-list {
+            margin: 15px 0;
+            padding-left: 20px;
+        }
+        .rules-list li {
+            margin-bottom: 10px;
+        }
+        .highlight-box {
+            background-color: #fff3cd;
+            border: 2px solid #ffeaa7;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .highlight-box h3 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+        .start-button {
+            display: block;
+            width: 300px;
+            margin: 40px auto;
+            padding: 20px;
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+            text-decoration: none;
+            text-align: center;
+            border-radius: 50px;
+            font-size: 1.3em;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+            transition: all 0.3s ease;
+        }
+        .start-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+            text-decoration: none;
+            color: white;
+        }
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .feature-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #dee2e6;
+            text-align: center;
+        }
+        .feature-icon {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        .level-indicator {
+            display: inline-block;
+            background-color: #007bff;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            margin: 10px 5px;
+        }
+        .demo-text {
+            background-color: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            font-style: italic;
+            border-left: 4px solid #2196f3;
+            margin: 15px 0;
+        }
+        
+        /* AdSense スタイリング */
+        .adsense-container {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            border: 1px solid #dee2e6;
+        }
+        
+        .adsense-label {
+            font-size: 12px;
+            color: #6c757d;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><img src="manatap_logo.png" alt="まなタップロゴ" class="combined-logo"></h1>
+        <p class="subtitle">～昔話を英語で楽しく学ぼう～</p>
+        
+        <!-- AdSense 広告 (ヘッダー下) -->
+        <div class="adsense-container">
+            <div class="adsense-label">広告</div>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-XXXXXXXXXXXXXXXXX"
+                 data-ad-slot="XXXXXXXXXX"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <div class="section">
+            <h2>🗺️ 物語を選ぼう</h2>
+            
+            <h3 style="color: #28a745; margin-bottom: 15px; font-size: 1.3em;">🍑 桃太郎</h3>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🎮</div>
+                    <p>桃太郎のお話<br>（9場面・約30分）</p>
+                    <a href="momotaro_gamebook.html" style="display: inline-block; margin-top: 10px; padding: 8px 16px; background-color: #28a745; color: white; text-decoration: none; border-radius: 5px; font-size: 0.9em;">短めで遊ぶ</a>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🏆</div>
+                    <p>くわしいお話<br>（25場面・約1時間）</p>
+                    <a href="momotaro_extended_gamebook.html" style="display: inline-block; margin-top: 10px; padding: 8px 16px; background-color: #d63384; color: white; text-decoration: none; border-radius: 5px; font-size: 0.9em;">長めで遊ぶ</a>
+                </div>
+            </div>
+
+            <h3 style="color: #4facfe; margin: 30px 0 15px 0; font-size: 1.3em;">🐢 浦島太郎</h3>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🌊</div>
+                    <p>浦島太郎のお話<br>（8場面・約25分）</p>
+                    <a href="urashima_taro_short_gamebook.html" style="display: inline-block; margin-top: 10px; padding: 8px 16px; background-color: #4facfe; color: white; text-decoration: none; border-radius: 5px; font-size: 0.9em;">短めで遊ぶ</a>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🏆</div>
+                    <p>くわしいお話<br>（22場面・約1時間）</p>
+                    <a href="urashima_taro_extended_gamebook.html" style="display: inline-block; margin-top: 10px; padding: 8px 16px; background-color: #00a8cc; color: white; text-decoration: none; border-radius: 5px; font-size: 0.9em;">長めで遊ぶ</a>
+                </div>
+            </div>
+
+            <h3 style="color: #ff9a9e; margin: 30px 0 15px 0; font-size: 1.3em;">🍎 白雪姫</h3>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">👸</div>
+                    <p>白雪姫のお話<br>（9場面・約30分）</p>
+                    <a href="snow_white_short_gamebook.html" style="display: inline-block; margin-top: 10px; padding: 8px 16px; background-color: #ff9a9e; color: white; text-decoration: none; border-radius: 5px; font-size: 0.9em;">短めで遊ぶ</a>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🏆</div>
+                    <p>くわしいお話<br>（20場面・約50分）</p>
+                    <a href="snow_white_extended_gamebook.html" style="display: inline-block; margin-top: 10px; padding: 8px 16px; background-color: #e91e63; color: white; text-decoration: none; border-radius: 5px; font-size: 0.9em;">長めで遊ぶ</a>
+                </div>
+            </div>
+
+            <h3 style="color: #e91e63; margin: 30px 0 15px 0; font-size: 1.3em;">👗 シンデレラ</h3>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🏰</div>
+                    <p>シンデレラのお話<br>（8場面・約25分）</p>
+                    <a href="cinderella_short_gamebook.html" style="display: inline-block; margin-top: 10px; padding: 8px 16px; background-color: #e91e63; color: white; text-decoration: none; border-radius: 5px; font-size: 0.9em;">短めで遊ぶ</a>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🏆</div>
+                    <p>くわしいお話<br>（20場面・約50分）</p>
+                    <a href="cinderella_extended_gamebook.html" style="display: inline-block; margin-top: 10px; padding: 8px 16px; background-color: #ad1457; color: white; text-decoration: none; border-radius: 5px; font-size: 0.9em;">長めで遊ぶ</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📚 このゲームブックについて</h2>
+            <p>みんなが知っている昔話を英語で読むゲームです。正しい答えを選んで物語を作りながら、楽しく英語を勉強できます。桃太郎、浦島太郎、白雪姫、シンデレラの4つのお話があります。</p>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">👶</div>
+                    <h3>小学生レベル</h3>
+                    <p>やさしい英語の言葉と文で作られています</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎮</div>
+                    <h3>選択式ゲーム</h3>
+                    <p>3つの答えから正しいものを選んで進みます</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔄</div>
+                    <h3>何度でも挑戦</h3>
+                    <p>間違えても「やり直し」ボタンで何度でもできます</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🎯 学習目標</h2>
+            <ul class="rules-list">
+                <li><strong>英語を読む力をのばす</strong> - やさしい英語の文を読んでわかる</li>
+                <li><strong>物語の理解</strong> - 昔話の正しいお話を覚える</li>
+                <li><strong>正しい答えを選ぶ力</strong> - お話に合った行動を選ぶ</li>
+                <li><strong>英語への親しみ</strong> - 遊びながら英語にふれる</li>
+            </ul>
+        </div>
+
+        <div class="highlight-box">
+            <h3>🎓 対象レベル</h3>
+            <div>
+                <span class="level-indicator">小学校3年生以上</span>
+                <span class="level-indicator">英検5級程度</span>
+                <span class="level-indicator">英語学習初心者</span>
+            </div>
+            <p style="margin-top: 15px;">使う英語の言葉や文法は小学生でもわかるやさしいものです。</p>
+        </div>
+
+        <div class="section">
+            <h2>📝 遊び方・ルール</h2>
+            <ol class="rules-list">
+                <li><strong>物語を読む</strong><br>
+                各場面で英語の文を読んでください。わからない言葉があっても、お話のなかから意味を考えてみましょう。</li>
+                
+                <li><strong>選択肢を選ぶ</strong><br>
+                3つの答えの中から、そのお話に合う「正しい行動」を選んでください。</li>
+                
+                <li><strong>正解の場合</strong><br>
+                正しい答えを選ぶと次の場面に進めます。お話が続きます。</li>
+                
+                <li><strong>間違いの場合</strong><br>
+                間違った答えを選ぶと、「やり直し」の画面が出ます。正しい答えを考え直してください。</li>
+                
+                <li><strong>物語完成</strong><br>
+                全ての場面で正しい答えを選ぶと、お話が完成します！</li>
+            </ol>
+        </div>
+
+        <div class="section">
+            <h2>💡 学習のコツ</h2>
+            <ul class="rules-list">
+                <li><strong>主人公の性格を考える</strong> - それぞれの主人公らしい行動は？</li>
+                <li><strong>英単語を推測する</strong> - 知らない言葉もお話から意味を考える</li>
+                <li><strong>お話の流れを意識する</strong> - 昔話の順序を思い出そう</li>
+                <li><strong>間違いを恐れない</strong> - 何度でもやり直せます</li>
+            </ul>
+            
+            <div class="demo-text">
+                <strong>英文例：</strong> "Once upon a time, there was an old woman."<br>
+                <strong>意味：</strong> 「昔々、おばあさんがいました。」
+            </div>
+        </div>
+
+        <div class="highlight-box">
+            <h3>⚠️ 注意点</h3>
+            <ul style="margin: 10px 0; padding-left: 20px;">
+                <li>このゲームでは<strong>むかしからの昔話</strong>に基づいた選択肢が正解となります</li>
+                <li>今の時代的な考え方や新しい答えは「間違い」として扱われます</li>
+                <li>英語が分からなくても、各物語を知っていれば解けるように作られています</li>
+            </ul>
+        </div>
+
+        <!-- AdSense 広告 (フッター上) -->
+        <div class="adsense-container">
+            <div class="adsense-label">広告</div>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-XXXXXXXXXXXXXXXXX"
+                 data-ad-slot="XXXXXXXXXX"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+        
+        <div style="text-align: center; margin-top: 30px; color: #6c757d; font-size: 0.9em;">
+            <p>楽しく英語を学んで、素敵な物語の冒険を完成させましょう！</p>
+            <p>Good luck and have fun! ✨📖🌟</p>
+            
+            <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #dee2e6;">
+                <a href="contact.html" style="color: #6c757d; text-decoration: none; font-size: 0.8em; margin-right: 20px;">お問い合わせ</a>
+                <a href="terms.html" style="color: #6c757d; text-decoration: none; font-size: 0.8em;">利用規約</a>
+                <p style="margin-top: 15px; color: #6c757d; font-size: 0.7em;">Copyright © 2025 R2 Inc. All Rights Reserved.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
