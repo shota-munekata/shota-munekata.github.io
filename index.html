@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="theme-color" content="#007bff">
+    <title>Regional Report</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles_manual.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- ヘッダー -->
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">
+                <img src="logo.png" alt="Regional Report" class="logo-image">
+                <div class="region-display">
+                    <span id="regionDisplay">全国版</span>
+                </div>
+            </div>
+            
+            <div class="search-container">
+                <input type="text" id="searchInput" placeholder="ニュースを検索...">
+                <button class="search-btn">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+            
+            <div class="header-controls">
+                <div class="location-selector">
+                    <i class="fas fa-location-dot"></i>
+                    <select id="regionSelect">
+                        <option value="all">全国</option>
+                        <option value="hokkaido">北海道</option>
+                        <option value="tohoku">東北</option>
+                        <option value="kanto">関東</option>
+                        <option value="tokyo">東京都</option>
+                        <option value="kanagawa">神奈川県</option>
+                        <option value="saitama">埼玉県</option>
+                        <option value="chiba">千葉県</option>
+                        <option value="nagano">長野県</option>
+                        <option value="tokai">東海</option>
+                        <option value="kyoto">京都府</option>
+                        <option value="osaka">大阪府</option>
+                        <option value="hyogo">兵庫県</option>
+                        <option value="chugoku">中国地方</option>
+                        <option value="kyushu">九州</option>
+                        <option value="okinawa">沖縄県</option>
+                    </select>
+                </div>
+                
+                <button class="refresh-btn" onclick="refreshNews()" title="ニュースを更新">
+                    <i class="fas fa-sync"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- アドセンス広告エリア3 (ヘッダー下バナー) -->
+        <div class="ad-container ad-header">
+            <div class="ad-label">スポンサーリンク</div>
+            <div class="ad-placeholder ad-leaderboard">
+                <div class="ad-content">
+                    <i class="fas fa-ad"></i>
+                    <p>Google AdSense 728×90</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ナビゲーション -->
+    <nav class="navigation">
+        <div class="nav-container">
+            <div class="nav-tabs" id="categoryTabs">
+                <button class="nav-tab active" data-category="all">すべて</button>
+                <button class="nav-tab" data-category="regional">地域・行政</button>
+                <button class="nav-tab" data-category="business">経済・ビジネス</button>
+                <button class="nav-tab" data-category="social">社会・事件</button>
+                <button class="nav-tab" data-category="sports">スポーツ</button>
+                <button class="nav-tab" data-category="tourism">観光スポット</button>
+                <button class="nav-tab" data-category="gourmet">グルメ</button>
+                <button class="nav-tab" data-category="events">イベント・祭り</button>
+                <button class="nav-tab" data-category="culture">文化・芸術</button>
+                <button class="nav-tab" data-category="health">医療・健康</button>
+                <button class="nav-tab" data-category="education">教育・学校</button>
+                <button class="nav-tab" data-category="transport">交通・アクセス</button>
+                <button class="nav-tab" data-category="disaster">防災・安全</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- メインコンテンツ -->
+    <main class="main-content">
+        <div class="container">
+            <!-- トップニュース -->
+            <section class="top-news-section">
+                <h2 class="section-title">
+                    <i class="fas fa-fire"></i>
+                    トップニュース
+                </h2>
+                <div class="top-news-grid" id="topNews">
+                    <!-- トップニュースカードがJavaScriptで動的に挿入されます -->
+                </div>
+            </section>
+
+            <!-- 速報ニュース -->
+            <section class="breaking-news-section">
+                <h2 class="section-title">
+                    <i class="fas fa-bolt"></i>
+                    速報
+                </h2>
+                <div class="breaking-news-ticker" id="breakingNews">
+                    <!-- 速報ニュースがJavaScriptで動的に挿入されます -->
+                </div>
+            </section>
+
+            <!-- メインニュースグリッド -->
+            <section class="news-grid-section">
+                <div class="news-grid" id="newsGrid">
+                    <!-- ニュースカードがJavaScriptで動的に挿入されます -->
+                </div>
+                <div class="load-more-container" id="loadMoreContainer" style="display: none;">
+                    <button class="load-more-btn" id="loadMoreBtn">
+                        <i class="fas fa-plus"></i>
+                        もっと見る
+                    </button>
+                </div>
+            </section>
+
+            <!-- アドセンス広告エリア2 (記事間レスポンシブ) -->
+            <div class="ad-container ad-inline">
+                <div class="ad-label">スポンサーリンク</div>
+                <div class="ad-placeholder ad-banner">
+                    <div class="ad-content">
+                        <i class="fas fa-ad"></i>
+                        <p>Google AdSense レスポンシブ</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- サイドバー情報 -->
+            <aside class="sidebar">
+                <!-- アドセンス広告エリア1 (レクタングル大) -->
+                <div class="ad-container ad-sidebar">
+                    <div class="ad-label">スポンサーリンク</div>
+                    <div class="ad-placeholder ad-rectangle">
+                        <div class="ad-content">
+                            <i class="fas fa-ad"></i>
+                            <p>Google AdSense<br>300×250</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="weather-widget">
+                    <h3><i class="fas fa-cloud-sun"></i> 今日の天気</h3>
+                    <div class="weather-content">
+                        <div class="weather-main">
+                            <span class="temperature">22°C</span>
+                            <div class="weather-desc">
+                                <i class="fas fa-cloud"></i>
+                                <span>曇り</span>
+                            </div>
+                        </div>
+                        <div class="weather-details">
+                            <div class="weather-item">
+                                <span>降水確率</span>
+                                <span>30%</span>
+                            </div>
+                            <div class="weather-item">
+                                <span>湿度</span>
+                                <span>65%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="trending-widget">
+                    <h3><i class="fas fa-trending-up"></i> 注目のキーワード</h3>
+                    <div class="trending-tags">
+                        <span class="tag">地方創生</span>
+                        <span class="tag">観光振興</span>
+                        <span class="tag">防災対策</span>
+                        <span class="tag">商店街活性化</span>
+                        <span class="tag">移住支援</span>
+                        <span class="tag">農業振興</span>
+                    </div>
+                </div>
+
+                <div class="local-info-widget">
+                    <h3><i class="fas fa-info-circle"></i> 地域情報</h3>
+                    <div class="local-info-list">
+                        <div class="info-item">
+                            <i class="fas fa-calendar"></i>
+                            <div>
+                                <strong>市民祭り</strong>
+                                <small>10月15日(日)</small>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-road"></i>
+                            <div>
+                                <strong>道路工事のお知らせ</strong>
+                                <small>国道1号線 夜間通行止め</small>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-hospital"></i>
+                            <div>
+                                <strong>休日診療</strong>
+                                <small>田中医院 9:00-17:00</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </main>
+
+    <!-- フッター -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-section">
+                <h4>Regional Report</h4>
+                <p>地域に根ざした情報をお届けします</p>
+            </div>
+            <div class="footer-section">
+                <h4>カテゴリー</h4>
+                <ul>
+                    <li><a href="#">地域ニュース</a></li>
+                    <li><a href="#">イベント情報</a></li>
+                    <li><a href="#">防災情報</a></li>
+                    <li><a href="#">生活情報</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>お問い合わせ</h4>
+                <ul>
+                    <li><a href="#">情報提供</a></li>
+                    <li><a href="#">広告掲載</a></li>
+                    <li><a href="#">プライバシーポリシー</a></li>
+                    <li><a href="#">利用規約</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>フォローする</h4>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Regional Report. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- ローディング表示 -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>ニュースを読み込み中...</p>
+        </div>
+    </div>
+
+    <!-- ニュース詳細モーダル -->
+    <div class="modal-overlay" id="newsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle"></h2>
+                <button class="modal-close" id="modalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-meta">
+                    <span class="modal-source" id="modalSource"></span>
+                    <span class="modal-date" id="modalDate"></span>
+                </div>
+                <div class="modal-image" id="modalImage"></div>
+                <div class="modal-content-text" id="modalContent"></div>
+                <div class="modal-tags" id="modalTags"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="share-btn">
+                    <i class="fas fa-share"></i>
+                    シェア
+                </button>
+                <button class="bookmark-btn">
+                    <i class="fas fa-bookmark"></i>
+                    保存
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
