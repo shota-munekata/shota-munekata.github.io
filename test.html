@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>テストページ</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .news-card { border: 1px solid #ccc; margin: 10px 0; padding: 15px; }
+        .test-section { margin: 20px 0; padding: 10px; background: #f5f5f5; }
+    </style>
+</head>
+<body>
+    <h1>基本機能テスト</h1>
+
+    <div class="test-section">
+        <h2>1. 基本要素テスト</h2>
+        <div id="newsGrid">記事がここに表示されます</div>
+        <div id="topNews">トップニュースがここに表示されます</div>
+    </div>
+
+    <div class="test-section">
+        <h2>2. デモデータテスト</h2>
+        <button onclick="testDemoData()">デモデータ表示</button>
+        <div id="testOutput"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>3. API接続テスト</h2>
+        <button onclick="testAPI()">API接続確認</button>
+        <div id="apiOutput"></div>
+    </div>
+
+    <script>
+        console.log('🧪 テストページ読み込み完了');
+
+        // デモデータテスト
+        function testDemoData() {
+            console.log('📦 デモデータテスト開始');
+
+            const demoData = [
+                {
+                    id: 'test1',
+                    title: 'テスト記事1',
+                    content: 'これはテスト記事です。',
+                    isBreaking: false
+                },
+                {
+                    id: 'test2',
+                    title: 'テスト記事2（速報）',
+                    content: 'これは速報のテスト記事です。',
+                    isBreaking: true
+                }
+            ];
+
+            // newsGridに表示
+            const newsGrid = document.getElementById('newsGrid');
+            const regularNews = demoData.filter(item => !item.isBreaking);
+
+            if (regularNews.length > 0) {
+                newsGrid.innerHTML = regularNews.map(item => `
+                    <div class="news-card">
+                        <h3>${item.title}</h3>
+                        <p>${item.content}</p>
+                    </div>
+                `).join('');
+                console.log('✅ 通常ニュース表示完了:', regularNews.length + '件');
+            }
+
+            // topNewsに表示
+            const topNews = document.getElementById('topNews');
+            topNews.innerHTML = demoData.map(item => `
+                <div class="news-card">
+                    <h3>${item.title} ${item.isBreaking ? '【速報】' : ''}</h3>
+                    <p>${item.content}</p>
+                </div>
+            `).join('');
+            console.log('✅ トップニュース表示完了:', demoData.length + '件');
+
+            document.getElementById('testOutput').innerHTML = '<p style="color: green;">✅ デモデータ表示成功！コンソールログを確認してください。</p>';
+        }
+
+        // API接続テスト
+        async function testAPI() {
+            console.log('🌐 API接続テスト開始');
+            const output = document.getElementById('apiOutput');
+
+            try {
+                const response = await fetch('/api/articles');
+                if (response.ok) {
+                    const articles = await response.json();
+                    console.log('✅ API接続成功:', articles);
+                    output.innerHTML = `<p style="color: green;">✅ API接続成功！記事数: ${articles.length}件</p><pre>${JSON.stringify(articles, null, 2)}</pre>`;
+                } else {
+                    console.error('❌ API応答エラー:', response.status);
+                    output.innerHTML = `<p style="color: red;">❌ API応答エラー: ${response.status}</p>`;
+                }
+            } catch (error) {
+                console.error('❌ API接続エラー:', error);
+                output.innerHTML = `<p style="color: red;">❌ API接続エラー: ${error.message}</p>`;
+            }
+        }
+
+        // 自動実行
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 テストページDOMContentLoaded');
+
+            // 基本要素確認
+            const newsGrid = document.getElementById('newsGrid');
+            const topNews = document.getElementById('topNews');
+
+            console.log('📋 要素確認:', {
+                newsGrid: !!newsGrid,
+                topNews: !!topNews
+            });
+        });
+    </script>
+</body>
+</html>

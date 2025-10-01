@@ -28,31 +28,31 @@ const NEWS_API_CONFIG = {
         {
             name: 'Yahoo!ニュース - 地域',
             url: 'https://news.yahoo.co.jp/rss/topics/local.xml',
-            category: 'all',
+            category: 'regional',
             region: 'all'
         },
         {
             name: 'Yahoo!ニュース - 国内',
-            url: 'https://news.yahoo.co.jp/rss/topics/domestic.xml', 
-            category: 'breaking',
+            url: 'https://news.yahoo.co.jp/rss/topics/domestic.xml',
+            category: 'social',
             region: 'all'
         },
         {
             name: 'NHK NEWS WEB - 地域',
             url: 'https://www3.nhk.or.jp/rss/news/cat07.xml',
-            category: 'all',
+            category: 'regional',
             region: 'all'
         },
         {
             name: '毎日新聞 - 地方版',
             url: 'https://mainichi.jp/rss/etc/local.rss',
-            category: 'all',
+            category: 'regional',
             region: 'all'
         },
         {
             name: '朝日新聞 - 地域',
             url: 'https://www.asahi.com/rss/asahi_newsheadlines.rdf',
-            category: 'all',
+            category: 'social',
             region: 'all'
         },
         
@@ -76,21 +76,27 @@ const NEWS_API_CONFIG = {
             region: 'all'
         },
         {
-            name: 'Travel + Leisure',
-            url: 'https://www.travelandleisure.com/syndication/feed',
+            name: 'ことりっぷ - 旅行情報',
+            url: 'https://co-trip.jp/feed/',
             category: 'tourism',
             region: 'all'
         },
         {
-            name: 'Lonely Planet',
-            url: 'https://www.lonelyplanet.com/news/feed',
+            name: 'まぐまぐニュース - 地域・観光',
+            url: 'https://www.mag2.com/p/news/rss',
+            category: 'regional',
+            region: 'all'
+        },
+        {
+            name: 'NAVITIME Travel - 地域情報',
+            url: 'https://travel.navitime.com/ja/area/jp/feed/',
             category: 'tourism',
             region: 'all'
         },
         {
-            name: 'National Geographic Travel',
-            url: 'https://www.nationalgeographic.com/travel/rss',
-            category: 'tourism', 
+            name: 'おでかけガイド - 地域イベント',
+            url: 'https://odekake.info/feed/',
+            category: 'event',
             region: 'all'
         },
         
@@ -98,55 +104,55 @@ const NEWS_API_CONFIG = {
         {
             name: '北海道新聞 - 道内総合',
             url: 'https://www.hokkaido-np.co.jp/rss/news/dogai.xml',
-            category: 'all',
+            category: 'regional',
             region: 'hokkaido'
         },
         {
             name: '河北新報 - 東北のニュース',
             url: 'https://kahoku.news/rss/news.xml',
-            category: 'all',
+            category: 'regional',
             region: 'tohoku'
         },
         {
             name: '信濃毎日新聞 - 長野',
             url: 'https://www.shinmai.co.jp/rss/news.xml',
-            category: 'all',
+            category: 'regional',
             region: 'nagano'
         },
         {
             name: '中日新聞 - 東海',
             url: 'https://www.chunichi.co.jp/rss/news.xml',
-            category: 'all',
+            category: 'regional',
             region: 'tokai'
         },
         {
             name: '京都新聞 - 滋賀・京都',
             url: 'https://www.kyoto-np.co.jp/rss/news.xml',
-            category: 'all',
+            category: 'regional',
             region: 'kyoto'
         },
         {
             name: '神戸新聞 - 兵庫',
             url: 'https://www.kobe-np.co.jp/rss/news.xml',
-            category: 'all',
+            category: 'regional',
             region: 'hyogo'
         },
         {
             name: '中国新聞 - 中国地方',
             url: 'https://www.chugoku-np.co.jp/rss/news.xml',
-            category: 'all',
+            category: 'regional',
             region: 'chugoku'
         },
         {
             name: '西日本新聞 - 九州',
             url: 'https://www.nishinippon.co.jp/rss/news.xml',
-            category: 'all',
+            category: 'regional',
             region: 'kyushu'
         },
         {
             name: '沖縄タイムス - 沖縄',
             url: 'https://www.okinawatimes.co.jp/rss/news.xml',
-            category: 'all',
+            category: 'regional',
             region: 'okinawa'
         },
         
@@ -206,13 +212,13 @@ const NEWS_API_CONFIG = {
         {
             name: '東京都公式 - お知らせ',
             url: 'https://www.metro.tokyo.lg.jp/rss/index.xml',
-            category: 'all',
+            category: 'regional',
             region: 'tokyo'
         },
         {
             name: '大阪市 - 市政ニュース',
             url: 'https://www.city.osaka.lg.jp/rss/news.xml',
-            category: 'all',
+            category: 'regional',
             region: 'osaka'
         },
         {
@@ -224,27 +230,39 @@ const NEWS_API_CONFIG = {
         {
             name: '神奈川県 - お知らせ',
             url: 'https://www.pref.kanagawa.jp/rss/osirase.xml',
-            category: 'all',
+            category: 'regional',
             region: 'kanagawa'
         },
         
         // === 国際ニュース（補完） ===
         {
-            name: 'BBC News - World',
-            url: 'http://feeds.bbci.co.uk/news/world/rss.xml',
-            category: 'breaking',
+            name: '地域ドットコム - 全国地域情報',
+            url: 'https://chiiki.com/feed/',
+            category: 'regional',
             region: 'all'
         },
         {
-            name: 'CNN - Top Stories',
-            url: 'http://rss.cnn.com/rss/edition.rss',
-            category: 'breaking',
+            name: 'Walkerplus - イベント・グルメ',
+            url: 'https://www.walkerplus.com/feed/',
+            category: 'event',
             region: 'all'
         },
         {
-            name: 'Reuters - World News',
-            url: 'http://feeds.reuters.com/reuters/worldNews',
-            category: 'breaking',
+            name: 'いこーよ - ファミリーお出かけ',
+            url: 'https://iko-yo.net/feed',
+            category: 'family',
+            region: 'all'
+        },
+        {
+            name: 'ローカルニュースネット',
+            url: 'https://localnews.jp/feed/',
+            category: 'regional',
+            region: 'all'
+        },
+        {
+            name: 'ぐるなび - 地域グルメ情報',
+            url: 'https://www.gnavi.co.jp/feed/',
+            category: 'gourmet',
             region: 'all'
         }
     ]
@@ -254,7 +272,7 @@ const NEWS_API_CONFIG = {
 let newsCache = {
     data: [],
     lastFetch: null,
-    expireTime: 30 * 60 * 1000 // 30分
+    expireTime: 5 * 60 * 1000 // 5分（テスト用に短縮）
 };
 
 // フィルター設定
@@ -277,51 +295,72 @@ async function fetchExternalNews() {
             return newsCache.data;
         }
         
-        // まず即座にデモデータを返して、確実にUIに表示
-        console.log('⚡ 即座にデモデータを表示');
-        const demoNews = generateDemoNews();
-        newsCache.data = demoNews;
-        newsCache.lastFetch = now;
-        
-        // バックグラウンドで外部RSS取得を継続
-        setTimeout(async () => {
+        // 即座に外部RSS取得を開始
+        console.log('🌐 外部RSS取得開始（即座実行）');
+        const allNews = [];
+        let successCount = 0;
+        let errorCount = 0;
+
+        // 全てのRSSフィードを試行（最初の10個のみ高速化）
+        const feedsToTry = NEWS_API_CONFIG.rssFeeds.slice(0, 15); // 15個に制限で高速化
+        console.log(`📡 ${feedsToTry.length}個のRSSフィードを同時取得中...`);
+
+        // 逐次表示用の処理：取得完了した記事から順次表示
+        const fetchPromises = feedsToTry.map(async (feed, index) => {
             try {
-                console.log('🌐 バックグラウンドで外部RSS取得中...');
-                const allNews = [];
-                
-                // RSS フィードから取得（制限時間付き）- より多くのフィードを試行
-                for (const feed of NEWS_API_CONFIG.rssFeeds.slice(0, 12)) { // 最初の12フィードを試行
-                    try {
-                        const rssNews = await Promise.race([
-                            fetchRSSFeed(feed),
-                            new Promise((_, reject) => setTimeout(() => reject(new Error('タイムアウト')), 5000))
-                        ]);
-                        allNews.push(...rssNews);
-                        console.log(`✅ ${feed.name}: ${rssNews.length}記事取得`);
-                    } catch (error) {
-                        console.warn(`❌ RSSフィード取得エラー (${feed.name}):`, error.message);
-                    }
+                const rssNews = await Promise.race([
+                    fetchRSSFeed(feed),
+                    new Promise((_, reject) => setTimeout(() => reject(new Error('タイムアウト')), 2000)) // 2秒に短縮
+                ]);
+                successCount++;
+                console.log(`✅ ${feed.name}: ${rssNews.length}記事取得`);
+
+                // 取得完了した記事を即座に追加・表示
+                if (rssNews.length > 0) {
+                    const newArticles = await processNewsData(rssNews);
+                    allNews.push(...newArticles);
+
+                    // newsDataに追加して即座に表示更新
+                    newsData.push(...newArticles);
+                    newsData.sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));
+
+                    // UIを即座に更新
+                    displayNews(newsData);
+                    console.log(`🔄 ${feed.name}の${newArticles.length}記事を表示に追加`);
                 }
-                
-                if (allNews.length > 0) {
-                    console.log(`🎉 外部RSS取得成功: ${allNews.length}記事`);
-                    const processedNews = await processNewsData([...allNews, ...demoNews]);
-                    newsCache.data = processedNews;
-                    
-                    // UIを更新
-                    displayNews(processedNews);
-                }
+
+                return rssNews;
             } catch (error) {
-                console.warn('🚫 バックグラウンドRSS取得失敗:', error);
+                errorCount++;
+                if (error.message !== 'タイムアウト') {
+                    console.warn(`❌ ${feed.name}: ${error.message}`);
+                }
+                return [];
             }
-        }, 100);
-        
-        return demoNews;
+        });
+
+        // バックグラウンドで残りの処理を完了
+        Promise.all(fetchPromises).then(() => {
+            console.log(`📊 RSS取得完了: 成功 ${successCount}件 / 失敗 ${errorCount}件`);
+            newsCache.data = allNews;
+            newsCache.lastFetch = now;
+            console.log(`🎉 全記事取得完了: ${allNews.length}記事`);
+        });
+
+        // 最初の数個の記事が表示されたらローディングを非表示
+        await new Promise(resolve => setTimeout(resolve, 800));
+
+        // 少しでも記事が取得できていればローディングを非表示
+        if (allNews.length > 0) {
+            hideLoading();
+        }
+
+        return allNews;
         
     } catch (error) {
         console.error('💥 ニュース取得エラー:', error);
-        // エラー時でもデモデータを返す
-        return generateDemoNews();
+        // エラー時は空配列を返す
+        return [];
     } finally {
         hideLoading();
     }
@@ -685,25 +724,54 @@ function isBreakingNews(title) {
 // ニュースのカテゴリーを自動判定
 function categorizeNews(title, content) {
     const text = `${title} ${content}`.toLowerCase();
-    
+
     const categories = {
-        tourism: ['観光', '旅行', 'スポット', '名所', '見どころ', 'ホテル', '温泉', '祭り'],
-        gourmet: ['グルメ', '料理', '食べ物', 'レストラン', '食事', 'カフェ', 'ラーメン'],
-        events: ['イベント', 'フェスティバル', 'コンサート', '展示', 'セール'],
-        culture: ['文化', '芸術', '美術館', '博物館', '伝統', '工芸'],
-        shopping: ['ショッピング', '買い物', '商店街', 'セール', '新商品'],
-        accommodation: ['宿泊', 'ホテル', '旅館', '民宿', 'ゲストハウス'],
-        transport: ['交通', '電車', 'バス', '道路', '空港', 'アクセス'],
-        weather: ['天気', '気象', '雨', '台風', '雪', '警報']
+        // 地域・行政ニュース（優先度高）
+        regional: ['市長', '知事', '議会', '市議', '県議', '選挙', '市政', '県政', '行政', '自治体', '住民', '地域', '市民', '県民', '市役所', '県庁', '発表', '決定', '条例', '予算'],
+
+        // 経済・ビジネス
+        business: ['経済', 'ビジネス', '企業', '会社', '商売', '売上', '業績', '投資', '株価', '市場', '商工会', '産業', '製造', '工場', '開発', '建設', '不動産', '求人', '雇用', '就職'],
+
+        // 社会・事件
+        social: ['事故', '事件', '火災', '救急', '警察', '逮捕', '被害', '犯罪', '裁判', '判決', '社会', '問題', '課題', '対策', '改善', '制度', '法律', '規制'],
+
+        // 防災・安全
+        disaster: ['台風', '地震', '津波', '豪雨', '洪水', '土砂崩れ', '避難', '警報', '注意報', '防災', '災害', '被災', '復旧', '復興', '安全', '危険', '緊急'],
+
+        // 交通・インフラ
+        transport: ['交通', '電車', 'バス', '道路', '高速', '渋滞', '工事', '運休', '遅延', '開通', '新線', '駅', '空港', '港', 'アクセス', '運行', '路線', 'ダイヤ'],
+
+        // 教育・学校
+        education: ['学校', '教育', '生徒', '学生', '児童', '授業', '入学', '卒業', '受験', '試験', '大学', '高校', '中学', '小学', '幼稚園', '保育園', '先生', '教師', '校長'],
+
+        // 医療・健康
+        health: ['病院', '医療', '健康', '医師', '看護', '治療', '診療', '検診', '予防', '感染', 'ワクチン', '薬', '患者', '介護', '福祉', '高齢者'],
+
+        // スポーツ
+        sports: ['スポーツ', '野球', 'サッカー', 'バスケ', 'テニス', 'ゴルフ', '陸上', '水泳', '試合', '大会', '優勝', '選手', 'チーム', '監督'],
+
+        // グルメ・食
+        gourmet: ['グルメ', '料理', '食べ物', 'レストラン', '食事', 'カフェ', 'ラーメン', '寿司', '居酒屋', '食堂', '名物', '特産', '地酒', '弁当', '食材', '農産物'],
+
+        // イベント・祭り
+        events: ['イベント', 'フェスティバル', 'コンサート', '展示', '祭り', '花火', '桜', '紅葉', 'ライトアップ', '催し', '開催', '参加', '体験'],
+
+        // 文化・芸術
+        culture: ['文化', '芸術', '美術館', '博物館', '伝統', '工芸', '歴史', '遺跡', '文化財', '展覧会', 'アート', '芸能', '音楽', '演劇'],
+
+        // 観光（最後に判定）
+        tourism: ['観光', '旅行', 'スポット', '名所', '見どころ', 'ホテル', '温泉', '宿泊', '旅館', 'ツアー', '観光客', '訪問']
     };
-    
+
+    // 優先順位に従ってカテゴリを判定
     for (const [category, keywords] of Object.entries(categories)) {
         if (keywords.some(keyword => text.includes(keyword))) {
             return category;
         }
     }
-    
-    return 'all';
+
+    // どのカテゴリにも該当しない場合は地域・行政にデフォルト設定
+    return 'regional';
 }
 
 // タグの抽出
@@ -713,95 +781,29 @@ function extractTags(text) {
 }
 
 // 一時的なデモニュース生成（外部RSS取得失敗時のフォールバック）
-function generateDemoNews() {
-    const now = new Date();
-    const demoNews = [
-        {
-            id: 'demo_1',
-            title: '【地方ニュース収集中】全国40以上の地域メディアから情報を収集しています',
-            excerpt: '北海道新聞、河北新報、信濃毎日新聞、中日新聞、京都新聞、神戸新聞、中国新聞、西日本新聞、沖縄タイムスなど全国の地方紙から記事を取得中です。',
-            content: '全国の地方新聞社、自治体、観光協会から最新の地域情報を収集しています。観光スポット、地域グルメ、お祭り・イベント、天気・交通情報など、各地域に密着した情報をお届けします。Yahoo!ニュース地域版、NHK地域ニュース、各地方新聞社のRSSフィードを活用し、リアルタイムで更新しています。',
-            image: 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=400&h=250&fit=crop&q=80',
-            category: 'breaking',
-            region: 'all',
-            source: '地域ニュース収集システム',
-            publishedAt: now.toISOString(),
-            isBreaking: true,
-            tags: ['地方ニュース', '収集中'],
-            originalUrl: '#'
-        },
-        {
-            id: 'demo_2', 
-            title: '観光・旅行情報を各地の観光協会から収集',
-            excerpt: 'じゃらん、るるぶ、楽天トラベル、ことりっぷ等の旅行サイトと各地観光協会の情報を統合して提供しています。',
-            content: '全国の観光協会、自治体観光課、旅行メディアから最新の観光情報を収集。季節のイベント情報、新しい観光スポットの開業情報、地域グルメの話題、温泉・宿泊施設の最新情報などをリアルタイムで更新しています。また、Lonely Planet、National Geographic Travel等の海外メディアからも国際的な視点での日本観光情報を取得しています。',
-            image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=250&fit=crop&q=80',
-            category: 'tourism',
-            region: 'all',
-            source: '観光情報統合システム',
-            publishedAt: new Date(now.getTime() - 30*60000).toISOString(),
-            isBreaking: false,
-            tags: ['観光', '旅行', '地域情報'],
-            originalUrl: '#'
-        },
-        {
-            id: 'demo_3',
-            title: 'グルメ・イベント・文化情報も充実',
-            excerpt: 'ぐるなび、食べログ、クックパッド、Walker plusなどから地域のグルメ・イベント情報を収集中です。',
-            content: '各地域の美味しいお店情報、地元の食材を使った料理、季節限定メニュー、地域のお祭りや文化イベント情報を幅広く収集しています。食べログマガジン、ぐるなび、クックパッドニュース、Walker plusのイベント情報、各地の文化施設情報などから、地域の「食」「遊」「学」の最新トピックをお届けします。',
-            image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=250&fit=crop&q=80',
-            category: 'gourmet',
-            region: 'all',
-            source: 'グルメ・イベント情報システム',
-            publishedAt: new Date(now.getTime() - 60*60000).toISOString(),
-            isBreaking: false,
-            tags: ['グルメ', 'イベント', '文化'],
-            originalUrl: '#'
-        },
-        {
-            id: 'demo_4',
-            title: '天気・防災・交通情報もリアルタイム配信',
-            excerpt: '気象庁、Yahoo!路線情報、JR各社の運行情報を統合し、地域の安全・安心に関わる情報を提供します。',
-            content: '気象庁の気象警報・注意報、Yahoo!路線情報の運行情報、JR東日本をはじめとする各交通機関の遅延・運休情報をリアルタイムで収集・配信しています。また、各自治体の防災情報、避難所情報、生活に関わる重要なお知らせも適時配信し、地域住民の安全で快適な生活をサポートします。',
-            image: 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=400&h=250&fit=crop&q=80',
-            category: 'weather',
-            region: 'all',
-            source: '防災・交通情報システム',
-            publishedAt: new Date(now.getTime() - 90*60000).toISOString(),
-            isBreaking: false,
-            tags: ['天気', '防災', '交通'],
-            originalUrl: '#'
-        },
-        {
-            id: 'demo_5',
-            title: '自治体からの公式情報も配信',
-            excerpt: '東京都、大阪市、京都市、神奈川県など主要自治体の公式お知らせを統合配信しています。',
-            content: '東京都、大阪市、京都市、神奈川県をはじめとする全国の自治体公式サイトから、住民向けの重要なお知らせ、イベント情報、行政サービスの更新情報などを収集・配信しています。観光情報だけでなく、地域住民にとって有用な行政情報も含めて、地域に密着した総合的な情報サービスを提供します。',
-            image: 'https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=400&h=250&fit=crop&q=80',
-            category: 'all',
-            region: 'all',
-            source: '自治体情報統合システム',
-            publishedAt: new Date(now.getTime() - 120*60000).toISOString(),
-            isBreaking: false,
-            tags: ['自治体', '公式情報', '行政'],
-            originalUrl: '#'
-        }
-    ];
-    
-    return demoNews;
-}
 
 async function processNewsData(newsArray) {
     // 重複除去、ソート、データクリーニング
-    const uniqueNews = newsArray.filter((news, index, self) => 
+    const uniqueNews = newsArray.filter((news, index, self) =>
         index === self.findIndex(n => n.title === news.title)
     );
-    
-    // 各記事の画像を動的に取得
+
+    // 記事内容に基づいてカテゴリを再分類
     for (const news of uniqueNews) {
+        // タイトルと説明文から適切なカテゴリを判定
+        const contentBasedCategory = categorizeNews(news.title, news.excerpt || news.description || '');
+
+        // 元のカテゴリが 'tourism' または 'all' の場合のみ上書き
+        if (news.category === 'tourism' || news.category === 'all' || news.category === 'event') {
+            news.category = contentBasedCategory;
+        }
+
+        // 画像を動的に取得
         await enhanceNewsImage(news);
+
+        console.log(`📊 カテゴリ判定: "${news.title}" → ${news.category}`);
     }
-    
+
     return uniqueNews.sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));
 }
 
@@ -920,32 +922,16 @@ async function loadAllNews() {
     try {
         showLoading();
         
-        // 手動記事を読み込み
-        const manualArticles = await window.manualArticleLoader.loadAllArticles();
-        console.log(`手動記事: ${manualArticles.length}件読み込み`);
-        
         // RSSニュースを読み込み
         const externalNews = await fetchExternalNews();
         console.log(`外部ニュース: ${externalNews.length}件読み込み`);
         
         // newsDataを初期化
         newsData.length = 0;
-        
-        // 手動記事を追加
-        if (manualArticles.length > 0) {
-            newsData.push(...manualArticles);
-        }
-        
+
         // 外部ニュースを追加
         if (externalNews.length > 0) {
             newsData.push(...externalNews);
-        }
-        
-        // フォールバック：何もない場合はデモデータ
-        if (newsData.length === 0) {
-            const fallbackNews = generateDemoNews();
-            newsData.push(...fallbackNews);
-            console.log('⚠️ フォールバックデータを表示');
         }
         
         // 日付順で再ソート
@@ -963,11 +949,8 @@ async function loadAllNews() {
     } catch (error) {
         console.error('ニュース読み込みエラー:', error);
         
-        // エラー時でもフォールバックデータを表示
-        const fallbackNews = generateDemoNews();
-        newsData.length = 0;
-        newsData.push(...fallbackNews);
-        displayNews(newsData);
+        // エラー時は何も表示しない
+        console.log('❌ 記事を読み込めませんでした');
         
         hideLoading();
     }
@@ -975,25 +958,52 @@ async function loadAllNews() {
 
 // 初期化
 document.addEventListener('DOMContentLoaded', async function() {
+    console.log('🚀 サイト初期化開始');
+
+    try {
+        // 基本的な要素が存在するか確認
+        const newsGrid = document.getElementById('newsGrid');
+        const topNews = document.getElementById('topNews');
+        const breakingNews = document.getElementById('breakingNews');
+        const modalElements = {
+            newsModal: !!newsModal,
+            modalTitle: !!document.getElementById('modalTitle'),
+            modalContent: !!document.getElementById('modalContent'),
+            modalClose: !!document.getElementById('modalClose')
+        };
+
+        console.log('📋 DOM要素確認:', {
+            newsGrid: !!newsGrid,
+            topNews: !!topNews,
+            breakingNews: !!breakingNews,
+            modalElements: modalElements
+        });
+
+        console.log('✅ DOM初期化完了');
+    } catch (error) {
+        console.error('DOM初期化エラー:', error);
+    }
+
+    // 基本イベントリスナーを設定
     initializeEventListeners();
     initializeLazyLoading();
-    
-    // 手動記事込みでニュースをロード
+
+    // 記事を読み込み
     await loadAllNews();
-    
+
+    // その他の初期化
     updateDateTime();
-    setInterval(updateDateTime, 60000); // 1分ごとに時刻更新
-    
-    // 初期地域表示を設定
+    setInterval(updateDateTime, 60000);
     updateRegionDisplay('all');
-    
-    // もっと見るボタンのイベントリスナー
+
     const loadMoreBtn = document.getElementById('loadMoreBtn');
     if (loadMoreBtn) {
         loadMoreBtn.addEventListener('click', () => {
             loadMoreNews(false);
         });
     }
+
+    console.log('✅ 全初期化完了');
 });
 
 // 画像遅延読み込みの初期化
@@ -1147,21 +1157,43 @@ function handleCategoryClick(e) {
 
 // ニュースカードのクリック処理
 function handleNewsCardClick(e) {
+    console.log('🖱️ クリックイベント発生:', e.target);
+
     // パフォーマンス最適化：特定の要素のみで処理
     if (e.target.tagName === 'A' || e.target.closest('a')) {
+        console.log('🔗 リンク要素なのでスキップ');
         return; // リンク要素はそのまま処理
     }
-    
-    const newsCard = e.target.closest('.news-card, .top-news-card, .breaking-news-item');
+
+    // より具体的にdata-news-idを持つ要素を探す
+    const newsCard = e.target.closest('[data-news-id]');
+    console.log('🎯 見つかったカード:', newsCard);
+
+    // より詳細な情報をログ出力
+    console.log('🔍 クリック詳細:', {
+        target: e.target,
+        targetClass: e.target.className,
+        targetParent: e.target.parentElement,
+        targetParentClass: e.target.parentElement?.className
+    });
+
     if (newsCard) {
         e.preventDefault();
         e.stopPropagation();
-        
+
         const newsId = newsCard.getAttribute('data-news-id');
+        console.log('🆔 ニュースID:', newsId);
+        console.log('🔍 モーダル要素確認:', !!newsModal);
+
         if (newsId) {
             // 高速化：debounce不要、即座に開く
+            console.log('📂 モーダル開始前チェック完了');
             openModal(newsId);
+        } else {
+            console.error('❌ data-news-idが見つかりません');
         }
+    } else {
+        console.log('📋 対象外の要素がクリックされました');
     }
 }
 
@@ -1235,19 +1267,30 @@ async function loadNews() {
 
 // ニュースの表示
 function displayNews(news) {
+    console.log('🎯 displayNews実行:', {
+        newsCount: news.length,
+        currentCategory: currentFilters.category,
+        newsData: news.slice(0, 3)
+    });
+
     // トップニュースは「すべて」カテゴリーでのみ表示
     if (currentFilters.category === 'all') {
+        console.log('📰 トップニュース表示開始');
         displayTopNews(news);
         showTopNewsSection();
     } else {
         hideTopNewsSection();
     }
-    
+
     // 速報ニュースを表示
-    displayBreakingNews(news.filter(item => item.isBreaking));
-    
+    const breakingNews = news.filter(item => item.isBreaking);
+    console.log('⚡ 速報ニュース:', breakingNews.length + '件');
+    displayBreakingNews(breakingNews);
+
     // 通常のニュースグリッドを表示
-    displayNewsGrid(news.filter(item => !item.isBreaking));
+    const regularNews = news.filter(item => !item.isBreaking);
+    console.log('📄 通常ニュース:', regularNews.length + '件');
+    displayNewsGrid(regularNews);
 }
 
 // トップニュース表示
@@ -1282,15 +1325,22 @@ function displayTopNews(news) {
 
 // 速報ニュース表示
 function displayBreakingNews(breakingNews) {
+    console.log('⚡ displayBreakingNews開始:', breakingNews.length + '件');
     const container = document.getElementById('breakingNews');
-    if (!container) return;
-    
-    if (breakingNews.length === 0) {
-        container.innerHTML = '<p class="no-news">現在、速報ニュースはありません。</p>';
+    if (!container) {
+        console.error('❌ 速報ニュースコンテナが見つかりません');
         return;
     }
-    
-    const breakingHtml = breakingNews.slice(0, 5).map(item => `
+
+    if (breakingNews.length === 0) {
+        console.log('📭 速報ニュースが0件のため、メッセージを表示');
+        container.innerHTML = '<p class="no-news">速報記事を準備中です。</p>';
+        return;
+    }
+
+    const breakingHtml = breakingNews.slice(0, 5).map(item => {
+        console.log('⚡ 速報記事HTML生成中:', { id: item.id, title: item.title });
+        return `
         <div class="breaking-news-item" data-news-id="${item.id}">
             <div class="breaking-icon">
                 <i class="fas fa-bolt"></i>
@@ -1300,29 +1350,41 @@ function displayBreakingNews(breakingNews) {
                 <span class="breaking-time">${formatTimeAgo(item.publishedAt)}</span>
             </div>
         </div>
-    `).join('');
-    
+        `;
+    }).join('');
+
+    console.log('⚡ 速報HTML挿入中...');
     container.innerHTML = breakingHtml;
+    console.log('✅ 速報ニュース挿入完了');
 }
 
 // ニュースグリッド表示
 function displayNewsGrid(news) {
+    console.log('🗂️ displayNewsGrid開始:', news.length + '件');
     const container = document.getElementById('newsGrid');
-    if (!container) return;
-    
+    if (!container) {
+        console.error('❌ newsGridコンテナが見つかりません');
+        return;
+    }
+
     if (news.length === 0) {
-        container.innerHTML = '<div class="no-news-message"><p>該当するニュースが見つかりませんでした。</p></div>';
+        console.log('📭 ニュースが0件のため、メッセージを表示');
+        container.innerHTML = '<div class="no-news-message"><p>記事を準備中です。</p></div>';
         return;
     }
     
     const newsHtml = news.map(item => {
+        console.log('📝 記事HTMLを生成中:', { id: item.id, title: item.title, isManual: item.isManual });
+
         // 手動記事の場合は専用のHTMLを生成
         if (item.isManual) {
-            return generateArticleHTML(item);
+            const manualHtml = generateArticleHTML(item);
+            console.log('🔧 手動記事HTML生成完了:', item.id);
+            return manualHtml;
         }
-        
+
         // 通常のRSSニュース記事のHTML
-        return `
+        const regularHtml = `
         <div class="news-card" data-news-id="${item.id}">
             <div class="news-card-image">
                 <img class="lazy-image loading" data-src="${item.image}" alt="${item.title}" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='250'%3E%3Crect width='100%25' height='100%25' fill='%23f0f0f0'/%3E%3C/svg%3E">
@@ -1341,24 +1403,31 @@ function displayNewsGrid(news) {
             </div>
         </div>
         `;
+        console.log('🔧 通常記事HTML生成完了:', item.id);
+        return regularHtml;
     }).join('');
-    
+
+    console.log('📋 最終HTML結合完了、DOM挿入中...');
     container.innerHTML = newsHtml;
+    console.log('✅ ニュースグリッド挿入完了');
 }
 
 // カテゴリー名の取得
 function getCategoryName(category) {
     const categoryNames = {
         all: 'すべて',
-        breaking: '速報',
+        regional: '地域・行政',
+        business: '経済・ビジネス',
+        social: '社会・事件',
+        sports: 'スポーツ',
         tourism: '観光スポット',
         gourmet: 'グルメ',
         events: 'イベント・祭り',
-        culture: '文化・体験',
-        shopping: 'ショッピング',
-        accommodation: '宿泊・温泉',
+        culture: '文化・芸術',
+        health: '医療・健康',
+        education: '教育・学校',
         transport: '交通・アクセス',
-        weather: '天気・防災'
+        disaster: '防災・安全'
     };
     return categoryNames[category] || 'その他';
 }
@@ -1404,16 +1473,40 @@ function formatTimeAgo(dateString) {
 
 // モーダルを開く
 async function openModal(newsId) {
+    console.log('🔍 モーダル開始:', newsId);
+
+    // モーダル要素の存在確認
+    if (!newsModal) {
+        console.error('❌ newsModal要素が見つかりません');
+        return;
+    }
+
     try {
         // 即座にモーダルを表示（UI応答性向上）
-        newsModal.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-        
+        console.log('📂 モーダル表示開始');
+        newsModal.classList.add('show');
+
+        // モーダルのスタイル状態をログ出力
+        console.log('🎨 モーダルスタイル確認:', {
+            display: newsModal.style.display,
+            visibility: newsModal.style.visibility,
+            opacity: newsModal.style.opacity,
+            zIndex: newsModal.style.zIndex,
+            computedDisplay: window.getComputedStyle(newsModal).display,
+            computedVisibility: window.getComputedStyle(newsModal).visibility
+        });
+        // スクロール位置を保存してからスクロールを無効化
+        const scrollY = window.scrollY;
+        document.body.style.position = 'fixed';
+        document.body.style.top = `-${scrollY}px`;
+        document.body.style.width = '100%';
+
         // ローディング表示
         document.getElementById('modalTitle').textContent = '読み込み中...';
         document.getElementById('modalContent').innerHTML = '<div class="loading-content">記事を読み込んでいます...</div>';
-        
+
         // newsDataから記事を検索（高速）
+        console.log('🔍 記事検索中:', { newsId, newsDataLength: newsData.length });
         let news = newsData.find(n => n.id === newsId || n.id == newsId);
         
         // newsDataにない場合はキャッシュから検索
@@ -1422,18 +1515,21 @@ async function openModal(newsId) {
         }
         
         if (!news) {
+            console.error('❌ 記事が見つかりません:', newsId);
             document.getElementById('modalTitle').textContent = 'エラー';
-            document.getElementById('modalContent').innerHTML = '<p>記事が見つかりませんでした。</p>';
+            document.getElementById('modalContent').innerHTML = '<p>記事を準備中です。しばらくお待ちください。</p>';
             return;
         }
+
+        console.log('✅ 記事見つかりました:', { id: news.id, title: news.title, isManual: news.isManual });
         
-        // 手動記事の場合は全文がすでに content に入っている
+        // コンテンツを即座に表示（フリーズ回避）
         let fullContent;
         if (news.isManual) {
             fullContent = news.content;
         } else {
-            // 外部記事の場合は全文取得（バックグラウンド）
-            fullContent = await fetchFullArticleContent(news);
+            // 外部記事の場合は既存のexcerptまたはcontentを使用
+            fullContent = news.content || news.excerpt || 'この記事の詳細は元サイトでご確認ください。';
         }
         
         // モーダル内容を更新
@@ -1456,8 +1552,25 @@ async function openModal(newsId) {
             modalImage.innerHTML = '';
         }
         
-        // コンテンツ表示
-        document.getElementById('modalContent').innerHTML = `<p>${fullContent}</p>`;
+        // コンテンツ表示（改行を維持）
+        const formattedContent = fullContent.replace(/\n/g, '<br>');
+        let modalContentHtml = `<div class="article-content">${formattedContent}</div>`;
+
+        // 手動記事の場合は位置情報も表示
+        if (news.isManual && news.location) {
+            modalContentHtml += `<div class="article-location"><i class="fas fa-map-marker-alt"></i> ${news.location}</div>`;
+        }
+
+        // 外部記事の場合は元記事リンクを表示
+        if (!news.isManual && news.originalUrl) {
+            modalContentHtml += `<div class="article-link">
+                <a href="${news.originalUrl}" target="_blank" rel="noopener noreferrer">
+                    <i class="fas fa-external-link-alt"></i> 元記事を読む
+                </a>
+            </div>`;
+        }
+
+        document.getElementById('modalContent').innerHTML = modalContentHtml;
         
         // タグ表示
         const modalTags = document.getElementById('modalTags');
@@ -1468,16 +1581,45 @@ async function openModal(newsId) {
         }
         
     } catch (error) {
-        console.error('モーダル表示エラー:', error);
-        document.getElementById('modalTitle').textContent = 'エラー';
-        document.getElementById('modalContent').innerHTML = '<p>記事の読み込みに失敗しました。</p>';
+        console.error('💥 モーダル表示エラー:', error);
+
+        // エラー時でもモーダルは正常に表示
+        try {
+            document.getElementById('modalTitle').textContent = 'エラーが発生しました';
+            document.getElementById('modalContent').innerHTML = `
+                <div class="error-content">
+                    <p>記事の読み込み中にエラーが発生しました。</p>
+                    <p>しばらく時間をおいてから再度お試しください。</p>
+                    <details>
+                        <summary>技術詳細</summary>
+                        <pre>${error.message}</pre>
+                    </details>
+                </div>
+            `;
+        } catch (e) {
+            console.error('💥💥 モーダルエラー表示もできませんでした:', e);
+            // 最後の手段：モーダルを閉じる
+            closeModal();
+        }
     }
 }
 
 // モーダルを閉じる
 function closeModal() {
-    newsModal.style.display = 'none';
-    document.body.style.overflow = 'auto';
+    newsModal.classList.remove('show');
+    // スクロール位置を復元
+    const scrollY = document.body.style.top;
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.width = '';
+    document.body.style.overflow = '';
+    document.body.style.overflowY = '';
+    document.documentElement.style.overflow = '';
+
+    // スクロール位置を復元
+    if (scrollY) {
+        window.scrollTo(0, parseInt(scrollY || '0') * -1);
+    }
 }
 
 // ローディング表示
