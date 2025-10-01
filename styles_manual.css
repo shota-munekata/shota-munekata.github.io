@@ -1,0 +1,177 @@
+/* 手動記事用のスタイル */
+
+/* 手動記事の識別 */
+.manual-article {
+    border: 2px solid #28a745;
+    position: relative;
+}
+
+.manual-article::before {
+    content: "手動投稿";
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: #28a745;
+    color: white;
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    z-index: 10;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* 優先度バッジ */
+.priority-badge {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    z-index: 9;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.badge-priority-high {
+    background: #dc3545;
+    color: white;
+}
+
+.badge-priority-low {
+    background: #6c757d;
+    color: white;
+}
+
+.badge-priority-normal {
+    background: #17a2b8;
+    color: white;
+}
+
+/* 記事タグ */
+.article-tags {
+    margin-top: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.article-tags .tag {
+    background: #e9ecef;
+    color: #495057;
+    padding: 2px 6px;
+    border-radius: 8px;
+    font-size: 0.7rem;
+    font-weight: 500;
+}
+
+/* 記事画像 */
+.article-image {
+    width: 100%;
+    max-height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin: 12px 0;
+}
+
+/* 記事メタ情報 */
+.article-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 8px;
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+
+.article-meta .category {
+    background: #007bff;
+    color: white;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 500;
+}
+
+.article-meta .location {
+    background: #ffc107;
+    color: #212529;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 500;
+}
+
+.article-meta .date,
+.article-meta .source {
+    color: #6c757d;
+}
+
+/* 手動記事用のホバー効果 */
+.manual-article:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.15);
+    transition: all 0.3s ease;
+}
+
+/* モーダルローディング用スタイル */
+.loading-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    color: #666;
+    font-style: italic;
+}
+
+.loading-content::before {
+    content: "";
+    width: 20px;
+    height: 20px;
+    border: 2px solid #e3e3e3;
+    border-top: 2px solid #007bff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-right: 10px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* パフォーマンス最適化 */
+.news-card {
+    will-change: transform;
+}
+
+.news-card:hover {
+    transition: transform 0.2s ease;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+    .manual-article::before {
+        top: 4px;
+        right: 4px;
+        font-size: 0.6rem;
+        padding: 1px 4px;
+    }
+    
+    .priority-badge {
+        top: 4px;
+        left: 4px;
+        font-size: 0.6rem;
+        padding: 2px 6px;
+    }
+    
+    .article-meta {
+        font-size: 0.7rem;
+        gap: 4px;
+    }
+    
+    .article-tags .tag {
+        font-size: 0.6rem;
+        padding: 1px 4px;
+    }
+}
