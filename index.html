@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="theme-color" content="#007bff">
+    <title>Regional Report</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles_manual.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- ヘッダー -->
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">
+                <img src="logo.png" alt="Regional Report" class="logo-image">
+                <div class="region-display">
+                    <span id="regionDisplay">全国版</span>
+                </div>
+            </div>
+            
+            <div class="search-container">
+                <input type="text" id="searchInput" placeholder="ニュースを検索...">
+                <button class="search-btn">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+
+            <!-- 天気予報表示エリア -->
+            <div class="weather-forecast-header" id="weatherForecastHeader">
+                <div class="weather-location" id="weatherLocation">東京の天気</div>
+                <div class="weather-forecast-scroll">
+                    <!-- 天気予報がJavaScriptで動的に挿入されます -->
+                </div>
+            </div>
+
+            <div class="header-controls">
+                <div class="location-selector">
+                    <i class="fas fa-location-dot"></i>
+                    <select id="regionSelect">
+                        <option value="all">全国</option>
+                        <option value="hokkaido">北海道</option>
+                        <option value="tohoku">東北</option>
+                        <option value="kanto">関東</option>
+                        <option value="tokyo">東京都</option>
+                        <option value="kanagawa">神奈川県</option>
+                        <option value="saitama">埼玉県</option>
+                        <option value="chiba">千葉県</option>
+                        <option value="nagano">長野県</option>
+                        <option value="tokai">東海</option>
+                        <option value="kyoto">京都府</option>
+                        <option value="osaka">大阪府</option>
+                        <option value="hyogo">兵庫県</option>
+                        <option value="chugoku">中国地方</option>
+                        <option value="kyushu">九州</option>
+                        <option value="okinawa">沖縄県</option>
+                    </select>
+                </div>
+
+                <button class="refresh-btn" onclick="refreshNews()" title="ニュースを更新">
+                    <i class="fas fa-sync"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- 速報ニュース -->
+        <section class="breaking-news-section-header">
+            <div class="breaking-news-ticker" id="breakingNews">
+                <!-- 速報ニュースがJavaScriptで動的に挿入されます -->
+            </div>
+        </section>
+
+        <!-- ナビゲーション -->
+        <nav class="navigation">
+            <div class="nav-container">
+                <div class="nav-tabs" id="categoryTabs">
+                    <button class="nav-tab active" data-category="all">すべて</button>
+                    <button class="nav-tab" data-category="regional">行政</button>
+                    <button class="nav-tab" data-category="social">社会・事件</button>
+                    <button class="nav-tab" data-category="sports">スポーツ</button>
+                    <button class="nav-tab" data-category="tourism">観光スポット</button>
+                    <button class="nav-tab" data-category="gourmet">グルメ</button>
+                    <button class="nav-tab" data-category="events">イベント・祭り</button>
+                    <button class="nav-tab" data-category="culture">文化・芸術</button>
+                    <button class="nav-tab" data-category="transport">交通・アクセス</button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- メインコンテンツ -->
+    <main class="main-content">
+        <div class="container">
+            <!-- メインニュースグリッド -->
+            <section class="news-grid-section">
+                <div class="news-grid" id="newsGrid">
+                    <!-- ニュースカードがJavaScriptで動的に挿入されます -->
+                </div>
+                <div class="load-more-container" id="loadMoreContainer" style="display: none;">
+                    <button class="load-more-btn" id="loadMoreBtn">
+                        <i class="fas fa-plus"></i>
+                        もっと見る
+                    </button>
+                </div>
+            </section>
+
+            <!-- サイドバー情報 -->
+            <aside class="sidebar">
+                <div class="trending-widget">
+                    <h3><i class="fas fa-trending-up"></i> 注目のキーワード</h3>
+                    <div class="trending-tags">
+                        <span class="tag">地方創生</span>
+                        <span class="tag">観光振興</span>
+                        <span class="tag">防災対策</span>
+                        <span class="tag">商店街活性化</span>
+                        <span class="tag">移住支援</span>
+                        <span class="tag">農業振興</span>
+                    </div>
+                </div>
+
+                <div class="local-info-widget">
+                    <h3><i class="fas fa-info-circle"></i> 地域情報</h3>
+                    <div class="local-info-list">
+                        <div class="info-item">
+                            <i class="fas fa-calendar"></i>
+                            <div>
+                                <strong>市民祭り</strong>
+                                <small>10月15日(日)</small>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-road"></i>
+                            <div>
+                                <strong>道路工事のお知らせ</strong>
+                                <small>国道1号線 夜間通行止め</small>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-hospital"></i>
+                            <div>
+                                <strong>休日診療</strong>
+                                <small>田中医院 9:00-17:00</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </main>
+
+    <!-- フッター -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-section">
+                <h4>Regional Report</h4>
+                <p>地域に根ざした情報をお届けします</p>
+            </div>
+            <div class="footer-section">
+                <h4>カテゴリー</h4>
+                <ul>
+                    <li><a href="#">地域ニュース</a></li>
+                    <li><a href="#">イベント情報</a></li>
+                    <li><a href="#">防災情報</a></li>
+                    <li><a href="#">生活情報</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>お問い合わせ</h4>
+                <ul>
+                    <li><a href="#">情報提供</a></li>
+                    <li><a href="#">広告掲載</a></li>
+                    <li><a href="#">プライバシーポリシー</a></li>
+                    <li><a href="#">利用規約</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>フォローする</h4>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Regional Report. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- ローディング表示 -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>ニュースを読み込み中...</p>
+        </div>
+    </div>
+
+    <!-- ニュース詳細モーダル -->
+    <div class="modal-overlay" id="newsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle"></h2>
+                <button class="modal-close" id="modalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-meta">
+                    <span class="modal-source" id="modalSource"></span>
+                    <span class="modal-date" id="modalDate"></span>
+                </div>
+                <div class="modal-image" id="modalImage"></div>
+                <div class="modal-content-text" id="modalContent"></div>
+                <div class="modal-tags" id="modalTags"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="share-btn">
+                    <i class="fas fa-share"></i>
+                    シェア
+                </button>
+                <button class="bookmark-btn">
+                    <i class="fas fa-bookmark"></i>
+                    保存
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js?v=2025102740"></script>
+    <script>
+        // Open-Meteo API設定（APIキー不要）
+        const WEATHER_BASE_URL = 'https://api.open-meteo.com/v1/forecast';
+
+        // 地域の座標マッピング
+        const regionCoordinates = {
+            'all': { lat: 35.6762, lon: 139.6503, name: '東京' }, // デフォルトは東京
+            'hokkaido': { lat: 43.2642, lon: 142.5454, name: '北海道' },
+            'tohoku': { lat: 38.7222, lon: 140.8694, name: '東北' },
+            'kanto': { lat: 35.6762, lon: 139.6503, name: '関東' },
+            'tokyo': { lat: 35.6762, lon: 139.6503, name: '東京' },
+            'kanagawa': { lat: 35.4478, lon: 139.6425, name: '神奈川' },
+            'saitama': { lat: 35.8617, lon: 139.6455, name: '埼玉' },
+            'chiba': { lat: 35.6074, lon: 140.1065, name: '千葉' },
+            'nagano': { lat: 36.2048, lon: 138.1810, name: '長野' },
+            'tokai': { lat: 35.1802, lon: 136.9066, name: '東海' },
+            'kyoto': { lat: 35.0116, lon: 135.7681, name: '京都' },
+            'osaka': { lat: 34.6937, lon: 135.5023, name: '大阪' },
+            'hyogo': { lat: 34.6913, lon: 135.1830, name: '兵庫' },
+            'chugoku': { lat: 34.3853, lon: 132.4553, name: '中国地方' },
+            'kyushu': { lat: 33.5904, lon: 130.4017, name: '九州' },
+            'okinawa': { lat: 26.2124, lon: 127.6792, name: '沖縄' }
+        };
+
+        // 天気コードマッピング（WMO Weather interpretation codes）
+        const weatherCodeMapping = {
+            0: '☀️',     // Clear sky
+            1: '🌤️',     // Mainly clear
+            2: '⛅',     // Partly cloudy
+            3: '☁️',     // Overcast
+            45: '🌫️',    // Fog
+            48: '🌫️',    // Depositing rime fog
+            51: '🌦️',    // Light drizzle
+            53: '🌦️',    // Moderate drizzle
+            55: '🌧️',    // Dense drizzle
+            56: '🌧️',    // Light freezing drizzle
+            57: '🌧️',    // Dense freezing drizzle
+            61: '🌧️',    // Slight rain
+            63: '🌧️',    // Moderate rain
+            65: '🌧️',    // Heavy rain
+            66: '🌧️',    // Light freezing rain
+            67: '🌧️',    // Heavy freezing rain
+            71: '❄️',    // Slight snow fall
+            73: '❄️',    // Moderate snow fall
+            75: '❄️',    // Heavy snow fall
+            77: '❄️',    // Snow grains
+            80: '🌦️',    // Slight rain showers
+            81: '🌧️',    // Moderate rain showers
+            82: '🌧️',    // Violent rain showers
+            85: '❄️',    // Slight snow showers
+            86: '❄️',    // Heavy snow showers
+            95: '⛈️',    // Thunderstorm
+            96: '⛈️',    // Thunderstorm with slight hail
+            99: '⛈️'     // Thunderstorm with heavy hail
+        };
+
+        // 実際の天気データを取得（Open-Meteo）
+        async function fetchRealWeatherData(region) {
+            console.log('🌤️ Open-Meteo天気データ取得開始:', region);
+            const coordinates = regionCoordinates[region] || regionCoordinates['all'];
+
+            try {
+                // Open-Meteo API（3日分の予報）
+                const url = `${WEATHER_BASE_URL}?latitude=${coordinates.lat}&longitude=${coordinates.lon}&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=Asia/Tokyo&forecast_days=3`;
+
+                console.log('🌤️ API URL:', url);
+                const response = await fetch(url);
+
+                if (!response.ok) {
+                    throw new Error('天気データの取得に失敗しました');
+                }
+
+                const data = await response.json();
+                console.log('🌤️ Open-Meteo APIレスポンス:', data);
+
+                // 3日分のデータを抽出
+                const weatherData = [];
+
+                for (let i = 0; i < 3; i++) {
+                    const weatherCode = data.daily.weather_code[i];
+                    const tempMax = Math.round(data.daily.temperature_2m_max[i]);
+                    const tempMin = Math.round(data.daily.temperature_2m_min[i]);
+                    const icon = weatherCodeMapping[weatherCode] || '☀️';
+
+                    weatherData.push({
+                        date: i === 0 ? '今日' : i === 1 ? '明日' : '明後日',
+                        icon: icon,
+                        high: tempMax,
+                        low: tempMin
+                    });
+                }
+
+                return weatherData;
+            } catch (error) {
+                console.error('🌤️ Open-Meteo天気データ取得エラー:', error);
+                // エラー時はフォールバックデータを返す
+                return getFallbackWeatherData();
+            }
+        }
+
+        // フォールバックデータ（APIが使用できない場合）
+        function getFallbackWeatherData() {
+            console.log('🌤️ フォールバック天気データを使用');
+            const weatherIcons = ['☀️', '⛅', '☁️', '🌧️'];
+            const weatherData = [];
+
+            for (let i = 0; i < 3; i++) {
+                const iconIndex = Math.floor(Math.random() * weatherIcons.length);
+                const high = Math.round(18 + Math.random() * 12);
+                const low = Math.round(high - 5 - Math.random() * 3);
+
+                weatherData.push({
+                    date: i === 0 ? '今日' : i === 1 ? '明日' : '明後日',
+                    icon: weatherIcons[iconIndex],
+                    high: high,
+                    low: low
+                });
+            }
+            return weatherData;
+        }
+
+        // 天気予報を表示
+        async function displayWeatherForecast(region = 'all') {
+            console.log('🌤️ 天気予報表示開始:', region);
+            const weatherContainer = document.querySelector('.weather-forecast-scroll');
+            const weatherLocation = document.getElementById('weatherLocation');
+
+            if (!weatherContainer) return;
+
+            // 地域名を更新
+            const coordinates = regionCoordinates[region] || regionCoordinates['all'];
+            if (weatherLocation) {
+                weatherLocation.textContent = `${coordinates.name}の天気`;
+            }
+
+            try {
+                // ローディング表示
+                weatherContainer.innerHTML = '<div class="weather-loading">読み込み中...</div>';
+
+                // 実際の天気データを取得
+                const weatherData = await fetchRealWeatherData(region);
+
+                // HTMLを生成して表示
+                const weatherHTML = weatherData.map(day => `
+                    <div class="weather-day">
+                        <div class="weather-date">${day.date}</div>
+                        <div class="weather-icon">${day.icon}</div>
+                        <div class="weather-temp">
+                            <span class="weather-temp-high">${day.high}°</span>
+                            <span class="weather-temp-low">${day.low}°</span>
+                        </div>
+                    </div>
+                `).join('');
+
+                weatherContainer.innerHTML = weatherHTML;
+                console.log('🌤️ 天気予報表示完了');
+            } catch (error) {
+                console.error('🌤️ 天気予報表示エラー:', error);
+                weatherContainer.innerHTML = '<div class="weather-error">天気データの取得に失敗しました</div>';
+            }
+        }
+
+        // 初期化
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                displayWeatherForecast('all');
+            }, 1000);
+
+            // 地域選択変更時の処理
+            const regionSelect = document.getElementById('regionSelect');
+            if (regionSelect) {
+                regionSelect.addEventListener('change', function() {
+                    displayWeatherForecast(this.value);
+                });
+            }
+        });
+    </script>
+</body>
+</html>

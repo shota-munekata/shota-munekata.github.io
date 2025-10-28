@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Open-Meteo天気テスト</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .weather-container {
+            display: flex;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .weather-day {
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            min-width: 120px;
+        }
+        .weather-icon {
+            font-size: 2em;
+            margin: 10px 0;
+        }
+        .temp {
+            font-weight: bold;
+        }
+        .high { color: #ff6b35; }
+        .low { color: #1e90ff; }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .log {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>🌤️ Open-Meteo天気APIテスト</h1>
+
+    <div>
+        <button onclick="testWeatherAPI('tokyo')">東京の天気</button>
+        <button onclick="testWeatherAPI('osaka')">大阪の天気</button>
+        <button onclick="testWeatherAPI('hokkaido')">北海道の天気</button>
+        <button onclick="testWeatherAPI('okinawa')">沖縄の天気</button>
+    </div>
+
+    <div class="weather-container" id="weatherDisplay">
+        <!-- 天気データがここに表示されます -->
+    </div>
+
+    <div class="log" id="logDisplay">ログがここに表示されます...</div>
+
+    <script>
+        const WEATHER_BASE_URL = 'https://api.open-meteo.com/v1/forecast';
+
+        // 地域の座標マッピング
+        const regionCoordinates = {
+            'all': { lat: 35.6762, lon: 139.6503, name: '東京' },
+            'hokkaido': { lat: 43.2642, lon: 142.5454, name: '北海道' },
+            'tohoku': { lat: 38.7222, lon: 140.8694, name: '東北' },
+            'kanto': { lat: 35.6762, lon: 139.6503, name: '関東' },
+            'tokyo': { lat: 35.6762, lon: 139.6503, name: '東京' },
+            'kanagawa': { lat: 35.4478, lon: 139.6425, name: '神奈川' },
+            'saitama': { lat: 35.8617, lon: 139.6455, name: '埼玉' },
+            'chiba': { lat: 35.6074, lon: 140.1065, name: '千葉' },
+            'nagano': { lat: 36.2048, lon: 138.1810, name: '長野' },
+            'tokai': { lat: 35.1802, lon: 136.9066, name: '東海' },
+            'kyoto': { lat: 35.0116, lon: 135.7681, name: '京都' },
+            'osaka': { lat: 34.6937, lon: 135.5023, name: '大阪' },
+            'hyogo': { lat: 34.6913, lon: 135.1830, name: '兵庫' },
+            'chugoku': { lat: 34.3853, lon: 132.4553, name: '中国地方' },
+            'kyushu': { lat: 33.5904, lon: 130.4017, name: '九州' },
+            'okinawa': { lat: 26.2124, lon: 127.6792, name: '沖縄' }
+        };
+
+        // 天気コードマッピング（WMO Weather interpretation codes）
+        const weatherCodeMapping = {
+            0: '☀️',     // Clear sky
+            1: '🌤️',     // Mainly clear
+            2: '⛅',     // Partly cloudy
+            3: '☁️',     // Overcast
+            45: '🌫️',    // Fog
+            48: '🌫️',    // Depositing rime fog
+            51: '🌦️',    // Light drizzle
+            53: '🌦️',    // Moderate drizzle
+            55: '🌧️',    // Dense drizzle
+            56: '🌧️',    // Light freezing drizzle
+            57: '🌧️',    // Dense freezing drizzle
+            61: '🌧️',    // Slight rain
+            63: '🌧️',    // Moderate rain
+            65: '🌧️',    // Heavy rain
+            66: '🌧️',    // Light freezing rain
+            67: '🌧️',    // Heavy freezing rain
+            71: '❄️',    // Slight snow fall
+            73: '❄️',    // Moderate snow fall
+            75: '❄️',    // Heavy snow fall
+            77: '❄️',    // Snow grains
+            80: '🌦️',    // Slight rain showers
+            81: '🌧️',    // Moderate rain showers
+            82: '🌧️',    // Violent rain showers
+            85: '❄️',    // Slight snow showers
+            86: '❄️',    // Heavy snow showers
+            95: '⛈️',    // Thunderstorm
+            96: '⛈️',    // Thunderstorm with slight hail
+            99: '⛈️'     // Thunderstorm with heavy hail
+        };
+
+        function log(message) {
+            const logElement = document.getElementById('logDisplay');
+            const timestamp = new Date().toLocaleTimeString();
+            logElement.textContent += `[${timestamp}] ${message}\n`;
+            logElement.scrollTop = logElement.scrollHeight;
+            console.log(`[${timestamp}] ${message}`);
+        }
+
+        async function testWeatherAPI(region) {
+            log(`🌤️ ${region}の天気データ取得を開始...`);
+
+            const coordinates = regionCoordinates[region] || regionCoordinates['tokyo'];
+            const url = `${WEATHER_BASE_URL}?latitude=${coordinates.lat}&longitude=${coordinates.lon}&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=Asia/Tokyo&forecast_days=3`;
+
+            log(`📡 API URL: ${url}`);
+
+            try {
+                const response = await fetch(url);
+                log(`📨 APIレスポンス状態: ${response.status} ${response.statusText}`);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                log(`✅ APIレスポンス受信: ${JSON.stringify(data, null, 2)}`);
+
+                // 天気データを表示
+                displayWeatherData(coordinates.name, data);
+
+            } catch (error) {
+                log(`❌ エラー: ${error.message}`);
+                console.error('天気データ取得エラー:', error);
+            }
+        }
+
+        function displayWeatherData(regionName, data) {
+            const weatherContainer = document.getElementById('weatherDisplay');
+
+            log(`🎨 ${regionName}の天気データを表示中...`);
+
+            const weatherHTML = [];
+
+            for (let i = 0; i < 3; i++) {
+                const weatherCode = data.daily.weather_code[i];
+                const tempMax = Math.round(data.daily.temperature_2m_max[i]);
+                const tempMin = Math.round(data.daily.temperature_2m_min[i]);
+                const icon = weatherCodeMapping[weatherCode] || '☀️';
+                const dayLabel = i === 0 ? '今日' : i === 1 ? '明日' : '明後日';
+
+                weatherHTML.push(`
+                    <div class="weather-day">
+                        <div><strong>${dayLabel}</strong></div>
+                        <div class="weather-icon">${icon}</div>
+                        <div class="temp">
+                            <span class="high">${tempMax}°</span> /
+                            <span class="low">${tempMin}°</span>
+                        </div>
+                        <div style="font-size: 0.8em; color: #666;">
+                            コード: ${weatherCode}
+                        </div>
+                    </div>
+                `);
+            }
+
+            weatherContainer.innerHTML = `
+                <h3>${regionName}の3日間天気予報</h3>
+                <div style="display: flex; gap: 20px;">
+                    ${weatherHTML.join('')}
+                </div>
+            `;
+
+            log(`✅ ${regionName}の天気表示完了`);
+        }
+
+        // ページ読み込み時に東京の天気を表示
+        window.addEventListener('DOMContentLoaded', function() {
+            log('🚀 ページ読み込み完了 - 東京の天気を取得します');
+            testWeatherAPI('tokyo');
+        });
+    </script>
+</body>
+</html>
